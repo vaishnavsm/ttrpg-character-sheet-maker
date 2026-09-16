@@ -1,0 +1,176 @@
+{
+  "version": 1,
+  "name": "Rowan Ashford",
+  "system": "dnd-5e-2024",
+  "paper": "a4",
+  "identity": [
+    {
+      "label": "Class & level",
+      "value": "Wizard · 1"
+    },
+    {
+      "label": "Species",
+      "value": "Human"
+    },
+    {
+      "label": "Background",
+      "value": "Sage"
+    }
+  ],
+  "attributes": [
+    {
+      "label": "Strength",
+      "value": 8,
+      "modifier": "−1"
+    },
+    {
+      "label": "Dexterity",
+      "value": 14,
+      "modifier": "+2"
+    },
+    {
+      "label": "Constitution",
+      "value": 14,
+      "modifier": "+2"
+    },
+    {
+      "label": "Intelligence",
+      "value": 17,
+      "modifier": "+3"
+    },
+    {
+      "label": "Wisdom",
+      "value": 12,
+      "modifier": "+1"
+    },
+    {
+      "label": "Charisma",
+      "value": 10,
+      "modifier": "+0"
+    }
+  ],
+  "defenses": [
+    {
+      "label": "Armor class",
+      "value": 12
+    },
+    {
+      "label": "Initiative",
+      "value": "+2"
+    },
+    {
+      "label": "Speed",
+      "value": "30 ft"
+    },
+    {
+      "label": "Proficiency",
+      "value": "+2"
+    }
+  ],
+  "hitPoints": {
+    "maximum": 8,
+    "hitDice": "1d6"
+  },
+  "savingThrows": [
+    {
+      "name": "Strength",
+      "bonus": "−1"
+    },
+    {
+      "name": "Dexterity",
+      "bonus": "+2"
+    },
+    {
+      "name": "Constitution",
+      "bonus": "+2"
+    },
+    {
+      "name": "Intelligence",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Wisdom",
+      "bonus": "+3",
+      "proficient": true
+    },
+    {
+      "name": "Charisma",
+      "bonus": "+0"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Arcana",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "History",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Insight",
+      "bonus": "+3",
+      "proficient": true
+    },
+    {
+      "name": "Investigation",
+      "bonus": "+5",
+      "proficient": true
+    }
+  ],
+  "resources": [
+    {
+      "name": "Heroic inspiration",
+      "maximum": 1
+    }
+  ],
+  "equipment": [
+    "Spellbook",
+    "Quarterstaff",
+    "Scholar’s pack",
+    "A sealed letter"
+  ],
+  "features": [
+    {
+      "name": "Character reminders",
+      "description": "Add your chosen feats, class features, and rules reminders. This example demonstrates the layout; it is not a complete character build."
+    }
+  ],
+  "spellcasting": {
+    "ability": "Intelligence",
+    "saveDC": 13,
+    "attackBonus": "+5",
+    "slots": [
+      {
+        "level": "1st",
+        "total": 2
+      }
+    ],
+    "spells": [
+      {
+        "name": "Light",
+        "level": "Cantrip",
+        "description": "Add your spell notes here."
+      },
+      {
+        "name": "Magic Missile",
+        "level": "1st",
+        "description": "Add your spell notes here."
+      },
+      {
+        "name": "Shield",
+        "level": "1st",
+        "description": "Add your spell notes here."
+      }
+    ]
+  },
+  "personality": [
+    {
+      "label": "Bond",
+      "text": "The letter bears my own handwriting. I have never seen it before."
+    }
+  ]
+}

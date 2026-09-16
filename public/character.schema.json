@@ -1,0 +1,582 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "system": {
+      "type": "string",
+      "enum": [
+        "dnd-5e-2014",
+        "dnd-5e-2024",
+        "generic"
+      ]
+    },
+    "systemName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "paper": {
+      "default": "a4",
+      "type": "string",
+      "enum": [
+        "a4",
+        "letter"
+      ]
+    },
+    "identity": {
+      "default": [],
+      "maxItems": 12,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "number"
+              }
+            ]
+          }
+        },
+        "required": [
+          "label",
+          "value"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "attributes": {
+      "default": [],
+      "maxItems": 24,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "modifier": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "number"
+              }
+            ]
+          }
+        },
+        "required": [
+          "label",
+          "value"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "defenses": {
+      "default": [],
+      "maxItems": 12,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "number"
+              }
+            ]
+          }
+        },
+        "required": [
+          "label",
+          "value"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "savingThrows": {
+      "default": [],
+      "maxItems": 40,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "bonus": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "proficient": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "bonus",
+          "proficient"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "skills": {
+      "default": [],
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "bonus": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "proficient": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "bonus",
+          "proficient"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "hitPoints": {
+      "type": "object",
+      "properties": {
+        "maximum": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 80
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "current": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 80
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "temporary": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 80
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "hitDice": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 80
+            },
+            {
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "required": [
+        "maximum"
+      ],
+      "additionalProperties": false
+    },
+    "resources": {
+      "default": [],
+      "maxItems": 30,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "maximum": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30
+          },
+          "used": {
+            "default": 0,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "name",
+          "maximum",
+          "used"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "attacks": {
+      "default": [],
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "bonus": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "damage": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "notes": {
+            "default": "",
+            "type": "string",
+            "maxLength": 300
+          }
+        },
+        "required": [
+          "name",
+          "bonus",
+          "damage",
+          "notes"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "features": {
+      "default": [],
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "description": {
+            "default": "",
+            "type": "string",
+            "maxLength": 8000
+          }
+        },
+        "required": [
+          "name",
+          "description"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "equipment": {
+      "default": [],
+      "maxItems": 200,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 300
+      }
+    },
+    "proficiencies": {
+      "default": [],
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 300
+      }
+    },
+    "personality": {
+      "default": [],
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 8000
+          }
+        },
+        "required": [
+          "label",
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "spellcasting": {
+      "type": "object",
+      "properties": {
+        "ability": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "saveDC": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 80
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "attackBonus": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 80
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "slots": {
+          "default": [],
+          "maxItems": 12,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "level": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "total": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 20
+              }
+            },
+            "required": [
+              "level",
+              "total"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "spells": {
+          "default": [],
+          "maxItems": 150,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "description": {
+                "default": "",
+                "type": "string",
+                "maxLength": 8000
+              },
+              "level": {
+                "type": "string",
+                "maxLength": 40
+              }
+            },
+            "required": [
+              "name",
+              "description",
+              "level"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "ability",
+        "saveDC",
+        "attackBonus",
+        "slots",
+        "spells"
+      ],
+      "additionalProperties": false
+    },
+    "sections": {
+      "default": [],
+      "maxItems": 30,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "column": {
+            "default": "right",
+            "type": "string",
+            "enum": [
+              "left",
+              "middle",
+              "right"
+            ]
+          },
+          "entries": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "description": {
+                  "default": "",
+                  "type": "string",
+                  "maxLength": 8000
+                }
+              },
+              "required": [
+                "name",
+                "description"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "title",
+          "column",
+          "entries"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "notes": {
+      "default": "",
+      "type": "string",
+      "maxLength": 20000
+    }
+  },
+  "required": [
+    "version",
+    "name",
+    "system",
+    "paper",
+    "identity",
+    "attributes",
+    "defenses",
+    "savingThrows",
+    "skills",
+    "resources",
+    "attacks",
+    "features",
+    "equipment",
+    "proficiencies",
+    "personality",
+    "sections",
+    "notes"
+  ],
+  "additionalProperties": false
+}

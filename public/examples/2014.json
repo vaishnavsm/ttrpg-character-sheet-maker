@@ -1,0 +1,256 @@
+{
+  "version": 1,
+  "name": "Mira Thornwood",
+  "system": "dnd-5e-2014",
+  "paper": "a4",
+  "identity": [
+    {
+      "label": "Class & level",
+      "value": "Ranger · 3"
+    },
+    {
+      "label": "Race",
+      "value": "Wood elf"
+    },
+    {
+      "label": "Background",
+      "value": "Outlander"
+    },
+    {
+      "label": "Alignment",
+      "value": "Neutral good"
+    }
+  ],
+  "attributes": [
+    {
+      "label": "Strength",
+      "value": 12,
+      "modifier": "+1"
+    },
+    {
+      "label": "Dexterity",
+      "value": 16,
+      "modifier": "+3"
+    },
+    {
+      "label": "Constitution",
+      "value": 14,
+      "modifier": "+2"
+    },
+    {
+      "label": "Intelligence",
+      "value": 10,
+      "modifier": "+0"
+    },
+    {
+      "label": "Wisdom",
+      "value": 14,
+      "modifier": "+2"
+    },
+    {
+      "label": "Charisma",
+      "value": 8,
+      "modifier": "−1"
+    }
+  ],
+  "defenses": [
+    {
+      "label": "Armor class",
+      "value": 15
+    },
+    {
+      "label": "Initiative",
+      "value": "+3"
+    },
+    {
+      "label": "Speed",
+      "value": "35 ft"
+    },
+    {
+      "label": "Proficiency",
+      "value": "+2"
+    },
+    {
+      "label": "Perception",
+      "value": 14
+    }
+  ],
+  "savingThrows": [
+    {
+      "name": "Strength",
+      "bonus": "+3",
+      "proficient": true
+    },
+    {
+      "name": "Dexterity",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Constitution",
+      "bonus": "+2"
+    },
+    {
+      "name": "Intelligence",
+      "bonus": "+0"
+    },
+    {
+      "name": "Wisdom",
+      "bonus": "+2"
+    },
+    {
+      "name": "Charisma",
+      "bonus": "−1"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Acrobatics",
+      "bonus": "+3"
+    },
+    {
+      "name": "Animal Handling",
+      "bonus": "+2"
+    },
+    {
+      "name": "Arcana",
+      "bonus": "+0"
+    },
+    {
+      "name": "Athletics",
+      "bonus": "+3",
+      "proficient": true
+    },
+    {
+      "name": "Deception",
+      "bonus": "−1"
+    },
+    {
+      "name": "History",
+      "bonus": "+0"
+    },
+    {
+      "name": "Insight",
+      "bonus": "+2"
+    },
+    {
+      "name": "Intimidation",
+      "bonus": "−1"
+    },
+    {
+      "name": "Investigation",
+      "bonus": "+0"
+    },
+    {
+      "name": "Medicine",
+      "bonus": "+2"
+    },
+    {
+      "name": "Nature",
+      "bonus": "+2",
+      "proficient": true
+    },
+    {
+      "name": "Perception",
+      "bonus": "+4",
+      "proficient": true
+    },
+    {
+      "name": "Performance",
+      "bonus": "−1"
+    },
+    {
+      "name": "Persuasion",
+      "bonus": "−1"
+    },
+    {
+      "name": "Religion",
+      "bonus": "+0"
+    },
+    {
+      "name": "Sleight of Hand",
+      "bonus": "+3"
+    },
+    {
+      "name": "Stealth",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Survival",
+      "bonus": "+4",
+      "proficient": true
+    }
+  ],
+  "hitPoints": {
+    "maximum": 28,
+    "hitDice": "3d10"
+  },
+  "resources": [
+    {
+      "name": "Inspiration",
+      "maximum": 1
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Longbow",
+      "bonus": "+7",
+      "damage": "1d8 + 3 piercing",
+      "notes": "Range 150 / 600 ft"
+    },
+    {
+      "name": "Shortsword",
+      "bonus": "+5",
+      "damage": "1d6 + 3 piercing",
+      "notes": "Finesse · light"
+    }
+  ],
+  "features": [
+    {
+      "name": "A watchful wanderer",
+      "description": "Mira keeps to the old forest roads, guiding travelers past the places where the birds fall silent."
+    },
+    {
+      "name": "Archery",
+      "description": "The supplied longbow attack bonus includes the fighting style bonus."
+    },
+    {
+      "name": "Field notes",
+      "description": "Add your selected subclass features and other rules reminders here."
+    }
+  ],
+  "equipment": [
+    "Longbow & 20 arrows",
+    "Two shortswords",
+    "Studded leather armor",
+    "Explorer’s pack",
+    "Hunting trap",
+    "A pressed silverleaf",
+    "15 gp"
+  ],
+  "proficiencies": [
+    "Light & medium armor, shields",
+    "Simple & martial weapons",
+    "Common, Elvish, Goblin"
+  ],
+  "personality": [
+    {
+      "label": "Personality",
+      "text": "I always sit where I can see the door."
+    },
+    {
+      "label": "Ideal",
+      "text": "The wild belongs to no one."
+    },
+    {
+      "label": "Bond",
+      "text": "Somewhere in the forest, my brother is still alive."
+    },
+    {
+      "label": "Flaw",
+      "text": "I trust tracks more than testimony."
+    }
+  ],
+  "notes": ""
+}

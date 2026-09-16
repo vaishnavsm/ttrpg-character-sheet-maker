@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "name": "Sable, Keeper of the Last Light",
+  "system": "generic",
+  "systemName": "The Hollow Coast",
+  "paper": "a4",
+  "identity": [
+    {
+      "label": "Calling",
+      "value": "Lighthouse keeper"
+    },
+    {
+      "label": "Origin",
+      "value": "The Drowned Isles"
+    },
+    {
+      "label": "Tier",
+      "value": "Seasoned"
+    }
+  ],
+  "attributes": [
+    {
+      "label": "Iron",
+      "value": 2
+    },
+    {
+      "label": "Edge",
+      "value": 3
+    },
+    {
+      "label": "Heart",
+      "value": 2
+    },
+    {
+      "label": "Shadow",
+      "value": 1
+    },
+    {
+      "label": "Wits",
+      "value": 3
+    }
+  ],
+  "defenses": [
+    {
+      "label": "Guard",
+      "value": 4
+    },
+    {
+      "label": "Resolve",
+      "value": 6
+    }
+  ],
+  "skills": [
+    {
+      "name": "Navigation",
+      "bonus": "+3",
+      "proficient": true
+    },
+    {
+      "name": "Mending",
+      "bonus": "+2"
+    },
+    {
+      "name": "Reading the sky",
+      "bonus": "+3",
+      "proficient": true
+    }
+  ],
+  "resources": [
+    {
+      "name": "Light",
+      "maximum": 6
+    },
+    {
+      "name": "Supply",
+      "maximum": 5,
+      "used": 1
+    },
+    {
+      "name": "Stress",
+      "maximum": 8
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Harpoon",
+      "bonus": "+2",
+      "damage": "2 harm",
+      "notes": "Close · thrown"
+    }
+  ],
+  "equipment": [
+    "Storm lantern",
+    "Coil of rope",
+    "Salt-stained journal",
+    "Three brass keys"
+  ],
+  "features": [
+    {
+      "name": "Beacon",
+      "description": "When the fog closes in, your lantern remembers the way home."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Vows",
+      "column": "right",
+      "entries": [
+        {
+          "name": "Find the missing lightship",
+          "description": "Last seen beyond the eastern shoals, three nights before the storm."
+        }
+      ]
+    },
+    {
+      "title": "Companions",
+      "column": "middle",
+      "entries": [
+        {
+          "name": "Brine",
+          "description": "An elderly gull with a talent for finding trouble."
+        }
+      ]
+    }
+  ],
+  "personality": [
+    {
+      "label": "Trouble",
+      "text": "The sea has started returning things I have lost."
+    }
+  ]
+}
