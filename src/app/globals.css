@@ -118,6 +118,8 @@ a:focus-visible, button:focus-visible, select:focus-visible, textarea:focus-visi
   color: var(--foreground);
 }
 
+.builder-bar button + button { margin-left: 8px; }
+
 .source-pane textarea {
   width: 100%;
   min-height: 0;

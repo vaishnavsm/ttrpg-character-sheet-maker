@@ -22,6 +22,7 @@ export function Workshop({ siteUrl = "" }: { siteUrl?: string }) {
   const [error, setError] = useState("");
   const requestId = useRef(0);
   const processingDocuments = useRef(new WeakSet<Document>());
+  const outputFrame = useRef<HTMLIFrameElement>(null);
 
   function render(nextSource = source) {
     try {
@@ -49,6 +50,13 @@ export function Workshop({ siteUrl = "" }: { siteUrl?: string }) {
       setError(exception instanceof Error ? exception.message : "Unable to render this JSON.");
       setJob(null);
     }
+  }
+
+  function printSheet() {
+    const frameWindow = outputFrame.current?.contentWindow;
+    if (!frameWindow) return;
+    frameWindow.focus();
+    frameWindow.print();
   }
 
   return (
@@ -79,6 +87,9 @@ export function Workshop({ siteUrl = "" }: { siteUrl?: string }) {
           <button type="button" onClick={() => render()} disabled={Boolean(job)}>
             {job ? "Rendering…" : "Render"}
           </button>
+          <button type="button" onClick={printSheet} disabled={!html || Boolean(job)}>
+            Print
+          </button>
         </div>
         <textarea
           aria-label="Character JSON"
@@ -100,7 +111,14 @@ export function Workshop({ siteUrl = "" }: { siteUrl?: string }) {
       </section>
 
       <section className="output-pane" aria-label="Rendered HTML">
-        {html && <iframe title="Rendered character sheet" srcDoc={html} sandbox="allow-same-origin" />}
+        {html && (
+          <iframe
+            ref={outputFrame}
+            title="Rendered character sheet"
+            srcDoc={html}
+            sandbox="allow-same-origin allow-modals"
+          />
+        )}
       </section>
 
       {job && (
