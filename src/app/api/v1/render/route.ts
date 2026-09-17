@@ -1,5 +1,6 @@
 import { apiOptions, apiResponse, authorizeApiRequest, readJsonBody } from "@/lib/api/http";
 import { renderCharacterSheet, validateCharacter } from "@/lib/sheet/service";
+import { siteUrlFromRequest } from "@/lib/site-url";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,7 +17,7 @@ export async function POST(request: Request): Promise<Response> {
     return apiResponse(request, Response.json(validation, { status: 422 }));
   }
 
-  const output = renderCharacterSheet(validation.character, process.env.SITE_URL ?? "");
+  const output = renderCharacterSheet(validation.character, siteUrlFromRequest(request));
   return apiResponse(
     request,
     new Response(output.html, {

@@ -1,12 +1,12 @@
 import { expect, test } from "@playwright/test";
 import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/client";
 
-test("stateless MCP exposes its skill, schema, validation, and shared renderer", async ({
+test("stateless MCP exposes its Markdown skill, validation, and shared renderer", async ({
   baseURL,
   request,
 }) => {
   const client = new Client(
-    { name: "folio-playwright-client", version: "1.0.0" },
+    { name: "character-sheet-playwright-client", version: "1.0.0" },
     { versionNegotiation: { mode: { pin: "2026-07-28" } } },
   );
   await client.connect(new StreamableHTTPClientTransport(new URL("/mcp", baseURL)));
@@ -22,12 +22,15 @@ test("stateless MCP exposes its skill, schema, validation, and shared renderer",
     expect(resources.resources.map((resource) => resource.uri)).toContain(
       "skill://render-character-sheet/SKILL.md",
     );
-    expect(resources.resources.map((resource) => resource.uri)).toContain("folio://character-schema");
+    expect(resources.resources.map((resource) => resource.uri)).toContain("character-sheet://examples/minimal");
 
     const skill = await client.readResource({ uri: "skill://render-character-sheet/SKILL.md" });
     const skillContent = skill.contents[0];
     expect(skillContent && "text" in skillContent ? skillContent.text : "").toContain(
       "# Render a character sheet",
+    );
+    expect(skillContent && "text" in skillContent ? skillContent.text : "").toContain(
+      "## Character JSON reference",
     );
 
     const invalid = await client.callTool({

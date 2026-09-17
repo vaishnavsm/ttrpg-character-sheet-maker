@@ -66,7 +66,7 @@ h1 { font-size: 22pt; line-height: 1.03; margin: 0; font-weight: normal; overflo
 .sheet-header { min-height: 20mm; padding-bottom: 3mm; }
 .name-banner { padding: 1mm 2mm; border: none; }
 .name-banner::after { display: none; }
-.name-line { height: 12mm; border-bottom: 1px solid #555; }
+.name-line { height: 12mm; display: flex; align-items: center; border-bottom: 1px solid #555; font-size: 18pt; line-height: 1.05; overflow-wrap: anywhere; }
 .sheet-panels { position: relative; min-height: 0; }
 .secondary-page { grid-template-rows: minmax(0, 1fr) auto; }
 .panel { margin: 0; }

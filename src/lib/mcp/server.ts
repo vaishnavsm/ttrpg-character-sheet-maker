@@ -6,7 +6,8 @@ import { createMcpHandler, McpServer } from "@modelcontextprotocol/server";
 import { z } from "zod";
 
 import { characterSchema } from "@/lib/sheet/schema";
-import { getCharacterJsonSchema, renderCharacterSheet, validateCharacter } from "@/lib/sheet/service";
+import { renderCharacterSheet, validateCharacter } from "@/lib/sheet/service";
+import { siteUrlFromRequest } from "@/lib/site-url";
 
 const skillUri = "skill://render-character-sheet/SKILL.md";
 const skillDescription =
@@ -85,15 +86,15 @@ const renderOutputSchema = z.strictObject({
   filename: z.string(),
 });
 
-function createServer(): McpServer {
+function createServer(siteUrl: string): McpServer {
   const server = new McpServer(
-    { name: "folio-character-sheet-renderer", version: "0.1.0" },
+    { name: "ttrpg-character-sheet-renderer", version: "0.1.0" },
     {
       capabilities: {
         extensions: { "io.modelcontextprotocol/skills": {} },
       },
       instructions:
-        "Folio is a stateless JSON-to-HTML renderer, not an autonomous agent or game-rules engine. For character-sheet creation or revision, load skill://render-character-sheet/SKILL.md, construct the character JSON yourself, then call validate_character and render_character_sheet. The complete schema is available at folio://character-schema.",
+        "This is a stateless JSON-to-HTML renderer, not an autonomous agent or game-rules engine. For character-sheet creation or revision, load skill://render-character-sheet/SKILL.md, construct the character JSON yourself, then call validate_character and render_character_sheet. The human-readable character format is documented in the skill.",
     },
   );
 
@@ -102,7 +103,7 @@ function createServer(): McpServer {
     {
       title: "Validate character data",
       description:
-        "Validate a candidate version-1 character object without rendering it. Returns normalized data with defaults on success and JSON Pointer error paths on failure. Read folio://character-schema for the complete contract.",
+        "Validate a candidate version-1 character object without rendering it. Returns normalized data with defaults on success and JSON Pointer error paths on failure. Read skill://render-character-sheet/SKILL.md for the complete human-readable contract.",
       inputSchema: z.strictObject({ candidate: z.unknown() }),
       outputSchema: validationOutputSchema,
       annotations: {
@@ -137,7 +138,7 @@ function createServer(): McpServer {
       },
     },
     async ({ character }) => {
-      const output = renderCharacterSheet(character, process.env.SITE_URL ?? "");
+      const output = renderCharacterSheet(character, siteUrl);
       return {
         content: [{ type: "text", text: output.html }],
         structuredContent: output,
@@ -166,34 +167,15 @@ function createServer(): McpServer {
   );
 
   server.registerResource(
-    "character-schema",
-    "folio://character-schema",
-    {
-      title: "Character JSON Schema",
-      description: "The complete JSON Schema accepted by render_character_sheet.",
-      mimeType: "application/schema+json",
-    },
-    async () => ({
-      contents: [
-        {
-          uri: "folio://character-schema",
-          mimeType: "application/schema+json",
-          text: JSON.stringify(getCharacterJsonSchema(), null, 2),
-        },
-      ],
-    }),
-  );
-
-  server.registerResource(
     "minimal-character-example",
-    "folio://examples/minimal",
+    "character-sheet://examples/minimal",
     {
       title: "Minimal character example",
       description: "A small structural example for the version-1 character schema.",
       mimeType: "application/json",
     },
     async () => ({
-      contents: [{ uri: "folio://examples/minimal", mimeType: "application/json", text: minimalExample }],
+      contents: [{ uri: "character-sheet://examples/minimal", mimeType: "application/json", text: minimalExample }],
     }),
   );
 
@@ -234,10 +216,6 @@ function createServer(): McpServer {
   return server;
 }
 
-const mcpHandler = createMcpHandler(() => createServer(), {
-  legacy: "reject",
-});
-
 export async function handleMcpRequest(request: Request): Promise<Response> {
   const origin = request.headers.get("origin");
   if (origin) {
@@ -256,5 +234,8 @@ export async function handleMcpRequest(request: Request): Promise<Response> {
     }
   }
 
-  return mcpHandler.fetch(request);
+  const handler = createMcpHandler(() => createServer(siteUrlFromRequest(request)), {
+    legacy: "reject",
+  });
+  return handler.fetch(request);
 }

@@ -1,4 +1,4 @@
-# Folio — character sheet workshop
+# D&D/TTRPG Character Sheet Maker
 
 A Next.js workshop and stateless remote MCP server that turn character JSON into printable, self-contained HTML. Rendering is deterministic: there are no model calls, uploads, accounts, or persistence.
 
@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3010. Paste JSON or select an example, then click **Render character sheet** (Cmd/Ctrl + Enter). Download the HTML or use **Print / PDF**. Disable browser-added headers and footers and print at 100% scale on the configured paper size.
+Open http://localhost:3010. Choose **Do it yourself**, select a blank starter profile or paste JSON, then click **Render** (Cmd/Ctrl + Enter).
 
 ## Agent interface
 
@@ -18,7 +18,7 @@ Connect any Streamable HTTP MCP client to `http://localhost:3010/mcp`. The endpo
 - `validate_character`, which returns normalized character data or repairable JSON Pointer errors.
 - `render_character_sheet`, which accepts the complete version-1 character object and returns self-contained HTML in both the text result and `structuredContent.html`.
 - `skill://render-character-sheet/SKILL.md`, a progressively disclosed Agent Skill that teaches the calling agent how to construct and render a sheet.
-- `folio://character-schema` and `folio://examples/minimal` resources.
+- `character-sheet://examples/minimal`, a small structural example. The complete human-readable format is documented in the Markdown skill.
 
 The server also exposes `skill://index.json` for clients using the earlier MCP skill-discovery convention and advertises the `io.modelcontextprotocol/skills` extension. It remains usable by ordinary MCP clients that only understand tools and resources.
 
@@ -213,4 +213,4 @@ Entries accept `optionLayout`: `stacked` (default, headings within one card), `c
 
 ## Page attribution
 
-Set `SITE_URL=https://your-domain.example` in `.env.local` or your deployment environment. Every sheet and cutting page then includes “Generated using” and the clickable URL; it is also retained in downloaded HTML and printed PDFs. With no value configured, attribution is omitted. The server reads this variable at request time (not baked into the client build); restart the server after changing its environment. Only absolute HTTP(S) URLs without credentials are accepted.
+Set `SITE_URL=https://your-domain.example` in `.env.local` or your deployment environment to override the public URL. Every sheet and cutting page includes “Made using” and a clickable URL; without `SITE_URL`, the renderer uses the current request origin. The attribution is retained in generated HTML and printed PDFs. The server reads the environment variable at request time; restart it after changing the value. Only absolute HTTP(S) URLs without credentials are accepted.

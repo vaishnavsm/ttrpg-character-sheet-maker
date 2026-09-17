@@ -1,159 +1,290 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
-import { examples } from "@/lib/sheet/examples";
-import { systemLabels, type Character } from "@/lib/sheet/schema";
-import { characterSheetFilename, parseCharacterJson, renderCharacterJson, renderCharacterSheet } from "@/lib/sheet/service";
+import { renderCharacterJson } from "@/lib/sheet/service";
 import { paginateDocument } from "@/lib/sheet/paginate";
+import { starterProfileGroups, starterProfiles } from "@/lib/sheet/starter-profiles";
 
-const initialSource = JSON.stringify(examples[0].character, null, 2);
-const initialCharacter = parseCharacterJson(initialSource);
-type RenderJob = { id: number; source: string; character: Character; html: string };
-type RenderResult = { html: string; pages: number; source: string; name: string; paper: "a4" | "letter"; system: string };
+const initialSource = JSON.stringify(starterProfiles.generic, null, 2);
 
-function Icon({ name }: { name: "print" | "download" | "arrow" | "file" }) {
-  const paths = {
-    print: <><path d="M6 8V3h12v5M6 17H3V9h18v8h-3"/><path d="M6 14h12v7H6zM17 11h1"/></>,
-    download: <><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></>,
-    arrow: <path d="M4 12h16m-6-6 6 6-6 6"/>,
-    file: <><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8M8 16h8"/></>,
-  };
-  return <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>;
-}
+type RenderJob = { id: number; html: string };
 
 export function Workshop({ siteUrl = "" }: { siteUrl?: string }) {
   const [source, setSource] = useState(initialSource);
-  const [exampleId, setExampleId] = useState("2014");
-  const [job, setJob] = useState<RenderJob | null>(() => ({ id: 0, source: initialSource, character: initialCharacter, html: renderCharacterSheet(initialCharacter, siteUrl).html }));
-  const [result, setResult] = useState<RenderResult | null>(null);
+  const [profile, setProfile] = useState("generic");
+  const [showCheatsheet, setShowCheatsheet] = useState(false);
+  const [job, setJob] = useState<RenderJob | null>(() => ({
+    id: 0,
+    html: renderCharacterJson(initialSource, siteUrl).html,
+  }));
+  const [html, setHtml] = useState("");
   const [error, setError] = useState("");
-  const [scale, setScale] = useState(1);
-  const [tab, setTab] = useState<"preview" | "html">("preview");
   const requestId = useRef(0);
   const processingDocuments = useRef(new WeakSet<Document>());
-  const preview = useRef<HTMLIFrameElement>(null);
-  const previewViewport = useRef<HTMLDivElement>(null);
-  const gutter = useRef<HTMLDivElement>(null);
-  const stale = result !== null && source !== result.source;
-  const pageWidth = result?.paper === "letter" ? 816 : 210 * 96 / 25.4;
-  const pageHeight = result?.paper === "letter" ? 1056 : 297 * 96 / 25.4;
-  const totalHeight = result ? result.pages * pageHeight + Math.max(0, result.pages - 1) * (7 * 96 / 25.4) : pageHeight;
-
-  useEffect(() => {
-    const viewport = previewViewport.current;
-    if (!viewport) return;
-    const observer = new ResizeObserver(([entry]) => setScale(Math.min(1, Math.max(.1, (entry.contentRect.width - 48) / pageWidth))));
-    observer.observe(viewport);
-    return () => observer.disconnect();
-  }, [pageWidth]);
 
   function render(nextSource = source) {
     try {
-      const { character, html } = renderCharacterJson(nextSource, siteUrl);
+      const rendered = renderCharacterJson(nextSource, siteUrl);
       setError("");
-      setJob({ id: ++requestId.current, source: nextSource, character, html });
-    } catch (e) {
-      requestId.current++;
+      setJob({ id: ++requestId.current, html: rendered.html });
+    } catch (exception) {
+      requestId.current += 1;
       setJob(null);
-      setError(e instanceof Error ? e.message : "Unable to render this character.");
+      setError(exception instanceof Error ? exception.message : "Unable to render this JSON.");
     }
   }
 
   async function finishRender(frame: HTMLIFrameElement, currentJob: RenderJob) {
     try {
-      const doc = frame.contentDocument;
-      if (!doc) throw new Error("The print renderer could not be opened.");
-      if (!doc.getElementById("sheets") || processingDocuments.current.has(doc)) return;
-      processingDocuments.current.add(doc);
-      await doc.fonts.ready;
+      const document = frame.contentDocument;
+      if (!document || !document.getElementById("sheets") || processingDocuments.current.has(document)) return;
+      processingDocuments.current.add(document);
+      await document.fonts.ready;
       if (requestId.current !== currentJob.id) return;
-      const rendered = paginateDocument(doc);
-      setResult({ ...rendered, source: currentJob.source, name: currentJob.character.name || String(currentJob.character.identity.find(field => field.label === "Class & level")?.value ?? "Unnamed character"), paper: currentJob.character.paper, system: currentJob.character.systemName ?? systemLabels[currentJob.character.system] });
+      setHtml(paginateDocument(document).html);
       setJob(null);
-    } catch (e) {
+    } catch (exception) {
       if (requestId.current !== currentJob.id) return;
-      setError(e instanceof Error ? e.message : "The sheet could not be paginated.");
+      setError(exception instanceof Error ? exception.message : "Unable to render this JSON.");
       setJob(null);
     }
   }
 
-  function loadExample(id: string) {
-    const sample = examples.find(example => example.id === id)!;
-    const nextSource = JSON.stringify(sample.character, null, 2);
-    setExampleId(id);
-    setSource(nextSource);
-    render(nextSource);
-  }
-
-  function format() {
-    try { setSource(JSON.stringify(JSON.parse(source), null, 2)); setError(""); }
-    catch { setError("Cannot format invalid JSON. Check commas, quotes, and brackets."); }
-  }
-
-  function download() {
-    if (!result || stale || job) return;
-    const url = URL.createObjectURL(new Blob([result.html], { type: "text/html;charset=utf-8" }));
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = characterSheetFilename(result.name);
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }
-
-  function print() {
-    if (!result || stale || job) return;
-    setTab("preview");
-    requestAnimationFrame(() => {
-      preview.current?.contentWindow?.focus();
-      preview.current?.contentWindow?.print();
-    });
-  }
-
   return (
-    <div className="app-shell">
-      <header className="app-header">
-        <Link className="brand" href="/" aria-label="Folio home"><span className="brand-mark">f<span>✧</span></span><span>folio<span className="brand-period">.</span></span></Link>
-        <span className="header-divider" />
-        <span className="header-caption">THE CHARACTER SHEET WORKSHOP</span>
-        <span className="build-tag"><span className="status-dot" /> Renderer playground <span className="version">v0.1</span></span>
-      </header>
-
-      <main>
-        <div className="intro">
-          <div><div className="overline">FROM SPECIFICATION TO ADVENTURE</div><h1>Your character, on paper.</h1><p>Paste a character’s JSON. Make a sheet worth bringing to the table.</p></div>
-          <div className="intro-note"><span className="little-star">✧</span><span>Made for pencil marks,<br/>coffee rings, and critical hits.</span></div>
+    <main className="builder">
+      <section className="source-pane">
+        <div className="builder-bar">
+          <Link href="/">Back</Link>
+          <button className="text-button" type="button" onClick={() => setShowCheatsheet(true)}>
+            Cheatsheet / schema
+          </button>
+          <select
+            aria-label="Starter profile"
+            value={profile}
+            onChange={(event) => {
+              const nextProfile = event.target.value;
+              const nextSource = JSON.stringify(starterProfiles[nextProfile], null, 2);
+              setProfile(nextProfile);
+              setSource(nextSource);
+              render(nextSource);
+            }}
+          >
+            {starterProfileGroups.map((group) => (
+              <optgroup key={group.label} label={group.label}>
+                {group.profiles.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+              </optgroup>
+            ))}
+          </select>
+          <button type="button" onClick={() => render()} disabled={Boolean(job)}>
+            {job ? "Rendering…" : "Render"}
+          </button>
         </div>
+        <textarea
+          aria-label="Character JSON"
+          value={source}
+          onChange={(event) => {
+            setSource(event.target.value);
+          }}
+          onKeyDown={(event) => {
+            if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+              event.preventDefault();
+              render();
+            }
+          }}
+          spellCheck={false}
+          autoCapitalize="off"
+          autoCorrect="off"
+        />
+        {error && <pre className="error-box" role="alert">{error}</pre>}
+      </section>
 
-        <div className="workbench">
-          <section className="editor-panel" aria-labelledby="input-heading">
-            <div className="panel-heading"><div><span className="step">01</span><h2 id="input-heading">Character specification</h2></div><span className="code-badge">JSON</span></div>
-            <div className="example-control"><label htmlFor="example">Start with an example</label><select id="example" value={exampleId} onChange={e => loadExample(e.target.value)}>{examples.map(example => <option key={example.id} value={example.id}>{example.label}</option>)}</select></div>
-            <div className="editor-toolbar"><span><span className="file-dot" /> character.json</span><button onClick={format} title="Format JSON with two-space indentation">Format JSON</button></div>
-            <div className="code-editor">
-              <div className="line-numbers" aria-hidden="true" ref={gutter}>{source.split("\n").map((_, i) => <div key={i}>{i + 1}</div>)}</div>
-              <textarea id="character-json" aria-label="Character JSON" aria-describedby="editor-help" value={source} onChange={e => setSource(e.target.value)} onScroll={e => { if (gutter.current) gutter.current.scrollTop = e.currentTarget.scrollTop; }} spellCheck={false} autoCapitalize="off" autoCorrect="off" onKeyDown={e => { if ((e.metaKey || e.ctrlKey) && e.key === "Enter") { e.preventDefault(); render(); } }} />
-            </div>
-            {error && <div className="error-box" role="alert"><strong>Check your specification</strong><pre>{error}</pre>{result && <p>The preview still shows your last successful render.</p>}</div>}
-            <div className="editor-bottom"><p id="editor-help">All numbers are yours. This renderer lays out the values you provide.</p><button className="primary-button" onClick={() => render()} disabled={Boolean(job)}>{job ? "Laying out pages…" : "Render character sheet"}<Icon name="arrow" /></button><span className="shortcut">⌘ / Ctrl + Enter to render</span></div>
-          </section>
+      <section className="output-pane" aria-label="Rendered HTML">
+        {html && <iframe title="Rendered character sheet" srcDoc={html} sandbox="allow-same-origin" />}
+      </section>
 
-          <section className="preview-panel" aria-labelledby="preview-heading">
-            <div className="panel-heading"><div><span className="step">02</span><h2 id="preview-heading">The character sheet</h2></div><div className="view-switch" aria-label="Output view"><button aria-pressed={tab === "preview"} onClick={() => setTab("preview")}>Preview</button><button aria-pressed={tab === "html"} onClick={() => setTab("html")}>HTML</button></div></div>
-            <div className="preview-toolbar"><span className="paper-label"><Icon name="file" />{result ? `${result.paper === "a4" ? "A4" : "US Letter"} · Portrait · ${result.pages} ${result.pages === 1 ? "page" : "pages"}` : "Preparing preview…"}</span><div className="export-actions"><button onClick={download} disabled={!result || stale || Boolean(job)}><Icon name="download" /><span>HTML</span></button><button onClick={print} disabled={!result || stale || Boolean(job)}><Icon name="print" /><span>Print / PDF</span></button></div></div>
-            <div className={`render-status${stale ? " is-stale" : ""}`} role="status"><span className="status-dot" />{job ? "Measuring content and laying out pages…" : stale ? "JSON changed. Render again to update your sheet." : result ? `${result.name} · Ready to print` : "Waiting for a valid character"}</div>
-            <div className="preview-viewport" ref={previewViewport} style={{ display: tab === "preview" ? undefined : "none" }}>
-              {result ? <div className="scaled-sheet" style={{ width: pageWidth * scale, height: totalHeight * scale }}><iframe ref={preview} title="Printable character sheet" srcDoc={result.html} sandbox="allow-same-origin allow-modals" style={{ width: pageWidth, height: totalHeight, transform: `scale(${scale})` }} /></div> : <div className="empty-preview">Your adventure starts here.</div>}
+      {job && (
+        <iframe
+          key={job.id}
+          className="measurement-frame"
+          title="Sheet layout measurement"
+          aria-hidden="true"
+          tabIndex={-1}
+          sandbox="allow-same-origin"
+          srcDoc={job.html}
+          ref={(frame) => {
+            if (frame?.contentDocument?.readyState === "complete") void finishRender(frame, job);
+          }}
+          onLoad={(event) => void finishRender(event.currentTarget, job)}
+        />
+      )}
+
+      {showCheatsheet && (
+        <div className="docs-backdrop" role="presentation" onMouseDown={() => setShowCheatsheet(false)}>
+          <article
+            className="docs-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="docs-title"
+            onMouseDown={(event) => event.stopPropagation()}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") setShowCheatsheet(false);
+            }}
+          >
+            <header className="docs-header">
+              <h2 id="docs-title">Character JSON</h2>
+              <button type="button" onClick={() => setShowCheatsheet(false)} aria-label="Close cheatsheet">Close</button>
+            </header>
+
+            <div className="docs-content">
+              <p>Start with these three fields. Everything else is optional.</p>
+              <pre>{`{
+  "version": 1,
+  "name": "",
+  "system": "generic"
+}`}</pre>
+
+              <section>
+                <h3>Document</h3>
+                <dl className="field-list">
+                  <div><dt><code>version</code></dt><dd>Always <code>1</code>.</dd></div>
+                  <div><dt><code>name</code></dt><dd>Character name. May be blank.</dd></div>
+                  <div><dt><code>system</code></dt><dd><code>generic</code>, <code>dnd-5e-2014</code>, or <code>dnd-5e-2024</code>.</dd></div>
+                  <div><dt><code>systemName</code></dt><dd>Custom display name when using <code>generic</code>.</dd></div>
+                  <div><dt><code>paper</code></dt><dd><code>a4</code> or <code>letter</code>. Defaults to <code>a4</code>.</dd></div>
+                </dl>
+              </section>
+
+              <section>
+                <h3>Identity and numbers</h3>
+                <pre>{`"identity": [
+  { "label": "Class & level", "value": "Fighter 3" }
+],
+"attributes": [
+  { "label": "Strength", "value": 16, "modifier": "+3" }
+],
+"defenses": [
+  { "label": "Armor class", "value": 17 }
+],
+"hitPoints": {
+  "maximum": 24,
+  "current": 19,
+  "temporary": 0,
+  "hitDice": "3d10"
+}`}</pre>
+                <p><code>identity</code> and <code>defenses</code> use label/value pairs. <code>attributes</code> can also include a modifier. Values may be text or numbers.</p>
+              </section>
+
+              <section>
+                <h3>Checks</h3>
+                <pre>{`"savingThrows": [
+  { "name": "Strength", "bonus": "+5", "proficient": true }
+],
+"skills": [
+  { "name": "Athletics", "bonus": "+5", "proficient": true }
+]`}</pre>
+                <p><code>proficient</code> defaults to <code>false</code>.</p>
+              </section>
+
+              <section>
+                <h3>Resources and attacks</h3>
+                <pre>{`"resources": [
+  {
+    "name": "Focus",
+    "maximum": 3,
+    "used": 1,
+    "recovery": "Long rest",
+    "display": "circles"
+  }
+],
+"attacks": [
+  {
+    "name": "Longsword",
+    "bonus": "+5",
+    "damage": "1d8 + 3 slashing",
+    "notes": "Versatile 1d10"
+  }
+]`}</pre>
+                <p>Resource <code>display</code> can be <code>circles</code> or <code>pool</code>. <code>maximum</code> is 1–30.</p>
+              </section>
+
+              <section>
+                <h3>Features and cards</h3>
+                <pre>{`"features": [
+  {
+    "name": "Second Wind",
+    "description": "Regain hit points.",
+    "kind": "ability",
+    "presentation": "list",
+    "details": [
+      { "label": "Use", "value": "Bonus action" }
+    ],
+    "usage": {
+      "resource": "Second Wind",
+      "amount": 1,
+      "recovery": "Short or long rest"
+    }
+  }
+]`}</pre>
+                <p><code>presentation</code> is <code>list</code> or <code>card</code>. Add <code>blankLines</code> for writing space. Entries can also contain <code>options</code>; use <code>optionLayout</code> with <code>stacked</code>, <code>compact</code>, or <code>cards</code>.</p>
+              </section>
+
+              <section>
+                <h3>Spellcasting</h3>
+                <pre>{`"spellcasting": {
+  "ability": "Intelligence",
+  "saveDC": 13,
+  "attackBonus": "+5",
+  "slots": [
+    { "level": "1st", "total": 2 }
+  ],
+  "spells": [
+    { "name": "Magic Missile", "level": "1st", "description": "" }
+  ]
+}`}</pre>
+                <p>Spells accept the same entry fields as features.</p>
+              </section>
+
+              <section>
+                <h3>Equipment, personality, and notes</h3>
+                <pre>{`"equipment": ["Backpack", "Rope", "Lantern"],
+"proficiencies": ["Light armor", "Common", "Elvish"],
+"personality": [
+  { "label": "Ideal", "text": "", "blankLines": 4 }
+],
+"notes": "Free-form notes",
+"notesBlankLines": 6`}</pre>
+                <p>Empty personality boxes and notes are omitted unless you provide text or positive blank-line counts.</p>
+              </section>
+
+              <section>
+                <h3>Custom sections</h3>
+                <pre>{`"sections": [
+  {
+    "title": "Inventory",
+    "entries": [
+      { "name": "Supplies", "description": "Rope and rations" }
+    ],
+    "blankLines": 4,
+    "width": 2,
+    "allowedWidths": [1, 2],
+    "placement": "secondary",
+    "priority": 40,
+    "group": "travel"
+  }
+]`}</pre>
+                <dl className="field-list compact">
+                  <div><dt><code>width</code></dt><dd><code>1</code>, <code>2</code>, or <code>3</code> columns.</dd></div>
+                  <div><dt><code>placement</code></dt><dd><code>main</code> or <code>secondary</code>.</dd></div>
+                  <div><dt><code>priority</code></dt><dd>Higher numbers are placed first.</dd></div>
+                  <div><dt><code>group</code></dt><dd>Keeps related sections together.</dd></div>
+                  <div><dt><code>column</code></dt><dd>Preferred <code>left</code>, <code>middle</code>, or <code>right</code> column.</dd></div>
+                </dl>
+              </section>
             </div>
-            {tab === "html" && <div className="html-view"><div className="html-caption">Self-contained HTML · embedded styles and artwork · no scripts</div><pre aria-label="Generated HTML">{result?.html ?? "Render a character to see its HTML."}</pre></div>}
-            <div className="preview-footer"><span>✧ &nbsp; Ink-friendly. Pencil-ready.</span><span>{Math.round(scale * 100)}% · Fit to width</span></div>
-          </section>
+          </article>
         </div>
-
-        <details className="schema-help"><summary><span>Working with the specification</span><span>Fields, paper sizes & custom systems <span aria-hidden="true">＋</span></span></summary><div className="help-grid"><div><h3>The essentials</h3><p>Required: <code>version: 1</code>, <code>name</code>, and <code>system</code>. Choose <code>dnd-5e-2014</code>, <code>dnd-5e-2024</code>, or <code>generic</code>. Set <code>paper</code> to <code>a4</code> or <code>letter</code>.</p></div><div><h3>Build your own system</h3><p>Use arbitrary labels in <code>attributes</code>, <code>defenses</code>, and <code>resources</code>. Add <code>sections</code> with a title, column, and named entries. The generic template makes no D&D assumptions. Try the Cards & blank boxes example to see both output styles together.</p></div><div><h3>Made to leave the screen</h3><p>Download the HTML to keep an offline copy. Use Print / PDF to print or save as PDF; turn off browser headers and footers. Whole boxes move onto additional pages; they never split. Set <code>presentation</code> to <code>card</code> for a cut-out. Card types share pages. Use <code>options</code> for alternate modes and <code>usage</code> for resource costs. Examples demonstrate layout, not complete rules-validated builds.</p></div></div></details>
-      </main>
-      <footer className="app-footer"><span>FOLIO / CHARACTER SHEET WORKSHOP</span><span>Rendered in your browser. Nothing is uploaded.</span></footer>
-      {job && <iframe key={job.id} ref={frame => { if (frame?.contentDocument?.readyState === "complete") void finishRender(frame, job); }} className="measurement-frame" title="Sheet layout measurement" aria-hidden="true" tabIndex={-1} sandbox="allow-same-origin" srcDoc={job.html} onLoad={e => void finishRender(e.currentTarget, job)} />}
-    </div>
+      )}
+    </main>
   );
 }

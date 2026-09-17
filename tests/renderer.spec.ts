@@ -229,8 +229,8 @@ test('configured attribution appears on sheets and card templates with safe link
   const {renderCharacterDocument}=await import('../src/lib/sheet/render');
   const {renderFooter}=await import('../src/lib/sheet/footer');
   const html=renderCharacterDocument(premadeExamples[0].character,'https://sheets.example/test?x=1&y=2');
-  expect(html.match(/Generated using/g)).toHaveLength(2);
+  expect(html.match(/Made using/g)).toHaveLength(2);
   expect(html).toContain('href="https://sheets.example/test?x=1&amp;y=2"');
-  expect(renderFooter()).not.toContain('Generated using');
+  expect(renderFooter()).not.toContain('Made using');
   expect(()=>renderFooter('javascript:alert(1)')).toThrow('SITE_URL');
 });

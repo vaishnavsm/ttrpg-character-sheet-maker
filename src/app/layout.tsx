@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Folio — Character sheet workshop",
-  description: "Turn character JSON into an ornamental, printable character sheet.",
+  title: "D&D/TTRPG Character Sheet Maker",
+  description: "Render a character sheet from JSON.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

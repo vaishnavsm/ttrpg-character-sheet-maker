@@ -11,7 +11,7 @@ export function GET(request: Request): Response {
   return apiResponse(
     request,
     Response.json({
-      name: "Folio character sheet renderer",
+      name: "D&D/TTRPG character sheet renderer",
       version: "v1",
       stateless: true,
       endpoints: {
