@@ -1,6 +1,6 @@
 # Folio — character sheet workshop
 
-A Next.js debug page that turns character JSON into printable, self-contained HTML. Rendering is local and deterministic: no model calls, agent endpoints, uploads, accounts, or persistence.
+A Next.js workshop and stateless remote MCP server that turn character JSON into printable, self-contained HTML. Rendering is deterministic: there are no model calls, uploads, accounts, or persistence.
 
 ## Run
 
@@ -10,6 +10,50 @@ npm run dev
 ```
 
 Open http://localhost:3010. Paste JSON or select an example, then click **Render character sheet** (Cmd/Ctrl + Enter). Download the HTML or use **Print / PDF**. Disable browser-added headers and footers and print at 100% scale on the configured paper size.
+
+## Agent interface
+
+Connect any Streamable HTTP MCP client to `http://localhost:3010/mcp`. The endpoint uses the stateless MCP `2026-07-28` protocol exclusively: clients discover it with `server/discover`, every request is self-describing, and legacy initialization/session traffic is rejected. It exposes:
+
+- `validate_character`, which returns normalized character data or repairable JSON Pointer errors.
+- `render_character_sheet`, which accepts the complete version-1 character object and returns self-contained HTML in both the text result and `structuredContent.html`.
+- `skill://render-character-sheet/SKILL.md`, a progressively disclosed Agent Skill that teaches the calling agent how to construct and render a sheet.
+- `folio://character-schema` and `folio://examples/minimal` resources.
+
+The server also exposes `skill://index.json` for clients using the earlier MCP skill-discovery convention and advertises the `io.modelcontextprotocol/skills` extension. It remains usable by ordinary MCP clients that only understand tools and resources.
+
+With the development server running, exercise the endpoint using the included ad-hoc client:
+
+```sh
+npm run test:mcp-client
+```
+
+Or inspect it with Kado MCP:
+
+```sh
+kado mcp tools-list http://localhost:3010/mcp --transport http --json
+kado mcp tools-get http://localhost:3010/mcp render_character_sheet --transport http --json
+```
+
+## HTTP API
+
+Non-agent clients can use the versioned, stateless API under `/api/v1`:
+
+- `GET /api/v1` discovers the available API and MCP endpoints.
+- `GET /api/v1/schema` returns the accepted character JSON Schema.
+- `POST /api/v1/validate` accepts a character object as the JSON body and returns normalized data or validation errors.
+- `POST /api/v1/render` accepts the same direct JSON body and returns `text/html; charset=utf-8`. Invalid characters return structured JSON with status `422`.
+
+For example:
+
+```sh
+curl -sS http://localhost:3010/api/v1/render \
+  -H 'Content-Type: application/json' \
+  --data '{"version":1,"name":"Arin","system":"generic"}' \
+  --output arin-sheet.html
+```
+
+Requests are limited to 250,000 bytes. Browser requests are allowed from the API's own origin; add comma-separated origins with `API_ALLOWED_ORIGINS`. Server-to-server requests do not need an `Origin` header.
 
 The stack follows the adjacent portfolio project: Next.js 16.3.3 App Router, React 19, TypeScript, ESLint, and Zod.
 
@@ -126,12 +170,12 @@ Each line reserves 6 mm, plus the heading and frame. Values range from 0 to 24; 
 
 ## Rendering and checks
 
-1. `parseCharacter(source)` validates input.
-2. `renderCharacterDocument(character)` creates HTML with inline CSS and static SVG frames, plus inert card templates.
+1. `renderCharacterJson(source)` parses and validates input through the shared sheet service.
+2. The service calls the pure `renderCharacterDocument(character)` renderer to create HTML with inline CSS and static SVG frames, plus inert card templates.
 3. `paginateDocument(document)` measures boxes in a browser, packs whole boxes and mixed cards, then numbers all pages and removes templates.
-4. The debug page previews, downloads, and prints the resulting script-free HTML.
+4. The debug page previews, downloads, and prints the resulting script-free HTML. `POST /api/v1/render` exposes the same rendering service to HTTP clients.
 
-Pagination requires a browser DOM. There is no server rendering endpoint. Exported files have no external assets or fonts; input text is escaped and a restrictive content security policy is included. For a frozen layout across different machines, save to PDF in the browser that rendered it.
+Pagination requires a browser DOM, so the API returns the deterministic pre-pagination document; a browser performs the final measured page packing when it previews or prints that HTML. Exported files have no external assets or fonts; input text is escaped and a restrictive content security policy is included. For a frozen layout across different machines, save to PDF in the browser that rendered it.
 
 ```sh
 npm run lint

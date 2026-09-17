@@ -3,13 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { examples } from "@/lib/sheet/examples";
-import { parseCharacter, systemLabels } from "@/lib/sheet/schema";
-import { renderCharacterDocument } from "@/lib/sheet/render";
+import { systemLabels, type Character } from "@/lib/sheet/schema";
+import { characterSheetFilename, parseCharacterJson, renderCharacterJson, renderCharacterSheet } from "@/lib/sheet/service";
 import { paginateDocument } from "@/lib/sheet/paginate";
 
 const initialSource = JSON.stringify(examples[0].character, null, 2);
-const initialCharacter = parseCharacter(initialSource);
-type RenderJob = { id: number; source: string; character: ReturnType<typeof parseCharacter>; html: string };
+const initialCharacter = parseCharacterJson(initialSource);
+type RenderJob = { id: number; source: string; character: Character; html: string };
 type RenderResult = { html: string; pages: number; source: string; name: string; paper: "a4" | "letter"; system: string };
 
 function Icon({ name }: { name: "print" | "download" | "arrow" | "file" }) {
@@ -25,7 +25,7 @@ function Icon({ name }: { name: "print" | "download" | "arrow" | "file" }) {
 export function Workshop({ siteUrl = "" }: { siteUrl?: string }) {
   const [source, setSource] = useState(initialSource);
   const [exampleId, setExampleId] = useState("2014");
-  const [job, setJob] = useState<RenderJob | null>(() => ({ id: 0, source: initialSource, character: initialCharacter, html: renderCharacterDocument(initialCharacter, siteUrl) }));
+  const [job, setJob] = useState<RenderJob | null>(() => ({ id: 0, source: initialSource, character: initialCharacter, html: renderCharacterSheet(initialCharacter, siteUrl).html }));
   const [result, setResult] = useState<RenderResult | null>(null);
   const [error, setError] = useState("");
   const [scale, setScale] = useState(1);
@@ -50,8 +50,7 @@ export function Workshop({ siteUrl = "" }: { siteUrl?: string }) {
 
   function render(nextSource = source) {
     try {
-      const character = parseCharacter(nextSource);
-      const html = renderCharacterDocument(character, siteUrl);
+      const { character, html } = renderCharacterJson(nextSource, siteUrl);
       setError("");
       setJob({ id: ++requestId.current, source: nextSource, character, html });
     } catch (e) {
@@ -97,7 +96,7 @@ export function Workshop({ siteUrl = "" }: { siteUrl?: string }) {
     const url = URL.createObjectURL(new Blob([result.html], { type: "text/html;charset=utf-8" }));
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${result.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "character"}-sheet.html`;
+    link.download = characterSheetFilename(result.name);
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }

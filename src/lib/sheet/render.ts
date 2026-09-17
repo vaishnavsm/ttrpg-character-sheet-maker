@@ -1,5 +1,5 @@
 import { renderFooter } from "./footer";
-import { characterSchema, type Character, type Entry } from "./schema";
+import { type Character, type Entry } from "./schema";
 import { sheetStyles } from "./styles";
 import { renderCardTemplates, renderUsage } from "./cards";
 import { escapeHtml as e } from "./html";
@@ -18,7 +18,7 @@ const writingField = (label: string, value?: string | number, small = false) => 
 
 /** Creates unpaginated, script-free HTML. All boxes are indivisible. */
 export function renderCharacterDocument(input: Character, siteUrl = ""): string {
-  const c = characterSchema.parse(input);
+  const c = input;
   const primary: string[] = [], secondary: string[] = [];
   const left = { column: 0, pinned: true };
   const middle = { column: 1, pinned: true };

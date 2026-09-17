@@ -65,15 +65,3 @@ export const systemLabels: Record<Character["system"], string> = {
   "dnd-5e-2024": "D&D 5e · 2024",
   generic: "Generic system",
 };
-
-export function parseCharacter(source: string): Character {
-  if (source.length > 250_000) throw new Error("Keep the character JSON below 250,000 characters.");
-  let data: unknown;
-  try { data = JSON.parse(source); }
-  catch (error) { throw new Error(`Invalid JSON: ${error instanceof Error ? error.message : "check your syntax"}`); }
-  const result = characterSchema.safeParse(data);
-  if (!result.success) {
-    throw new Error(result.error.issues.map(issue => `${issue.path.join(".") || "character"}: ${issue.message}`).join("\n"));
-  }
-  return result.data;
-}

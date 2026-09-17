@@ -1,0 +1,14 @@
+{
+  "character": {
+    "version": 1,
+    "name": "Kado Hero",
+    "system": "generic",
+    "identity": [
+      { "label": "Role", "value": "Pathfinder" }
+    ],
+    "attributes": [
+      { "label": "Resolve", "value": 15, "modifier": "+2" }
+    ],
+    "hitPoints": { "maximum": 12 }
+  }
+}
