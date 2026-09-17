@@ -115,5 +115,6 @@ h1 { font-size: 22pt; line-height: 1.03; margin: 0; font-weight: normal; overflo
 .card-option .card-usage { padding: 1mm; }
 @media screen { body { padding: 0; } .sheet-page { box-shadow: 0 2px 9px #00000012; } }
 @media print { html, body { background: white; } .sheet-page { margin: 0; box-shadow: none; } }
+.layout-error { margin: 10mm auto; max-width: 190mm; padding: 5mm; color: #7a1212; background: #fff4f4; border: 1px solid #b44; white-space: pre-wrap; }
 `;
 }

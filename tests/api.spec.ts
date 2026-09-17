@@ -47,7 +47,8 @@ test.describe("HTTP API", () => {
     const html = await response.text();
     expect(html).toContain("<!DOCTYPE html>");
     expect(html).toContain("API Hero");
-    expect(html).not.toContain("<script");
+    expect(html).toContain('data-layout-state="pending"');
+    expect(html).toContain('id="character-sheet-layout"');
   });
 
   test("uses HTTP errors for invalid requests", async ({ request }) => {

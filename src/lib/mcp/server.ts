@@ -11,7 +11,7 @@ import { siteUrlFromRequest } from "@/lib/site-url";
 
 const skillUri = "skill://render-character-sheet/SKILL.md";
 const skillDescription =
-  "Validate structured TTRPG character data and render it as a printable, self-contained HTML character sheet. Use when a user wants to create or revise a character sheet and the mechanical values can be supplied explicitly.";
+  "Compose structured TTRPG character data into a compact, printable character sheet and optional cut-out reference cards. Use when creating or revising a sheet from explicit character mechanics.";
 
 function loadSkillMarkdown(): string {
   return readFileSync(
@@ -127,7 +127,7 @@ function createServer(siteUrl: string): McpServer {
     {
       title: "Render character sheet HTML",
       description:
-        "Render a complete, self-contained, script-free HTML character sheet from structured version-1 character data. This server does not calculate game rules or invent missing values. Read skill://render-character-sheet/SKILL.md for the workflow.",
+        "Render a complete, self-contained HTML character sheet from structured version-1 character data. The returned file includes its offline layout runtime and finishes pagination when opened; no site workflow or server-side browser is required. This server does not calculate game rules or invent missing values. Read skill://render-character-sheet/SKILL.md for the workflow.",
       inputSchema: z.strictObject({ character: characterSchema }),
       outputSchema: renderOutputSchema,
       annotations: {

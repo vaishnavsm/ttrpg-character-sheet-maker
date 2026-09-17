@@ -3,6 +3,7 @@ import { type Character, type Entry } from "./schema";
 import { sheetStyles } from "./styles";
 import { renderCardTemplates, renderUsage } from "./cards";
 import { escapeHtml as e } from "./html";
+import { layoutRuntimeSource } from "./layout-runtime";
 export { escapeHtml } from "./html";
 
 const lines = (count: number) => `<div class="writing-space">${Array.from({ length: count }, () => '<div class="write-line"></div>').join("")}</div>`;
@@ -16,7 +17,7 @@ const pips = (count: number, used = 0) => `<span class="pips">${Array.from({ len
 const tracker = (name: string, count: number, used = 0, recovery?: string, pool = false) => `<div class="tracker"><strong class="tracker-label">${e(name)}</strong>${pool ? `<div class="pool-value">______ / ${count}</div>` : pips(count, used)}${recovery ? `<small class="recovery">${e(recovery)}</small>` : ""}</div>`;
 const writingField = (label: string, value?: string | number, small = false) => `<div class="writing-field${small ? " small" : ""}"><div class="writing-value">${e(value)}</div><span class="field-label">${e(label)}</span></div>`;
 
-/** Creates unpaginated, script-free HTML. All boxes are indivisible. */
+/** Creates self-contained HTML whose embedded runtime performs final pagination. */
 export function renderCharacterDocument(input: Character, siteUrl = ""): string {
   const c = input;
   const primary: string[] = [], secondary: string[] = [];
@@ -50,5 +51,5 @@ export function renderCharacterDocument(input: Character, siteUrl = ""): string 
     if (items.some(item => item.description || item.name || item.blankLines) || s.blankLines) (s.placement === "main" ? primary : secondary).push(panel(s.title,entries(items)+lines(s.blankLines ?? 0),{placement:s.placement,column:{left:0,middle:1,right:2}[s.column],width:s.width,priority:s.priority,group:s.group,allowedWidths:s.allowedWidths}));
   }
   if (c.notes || c.notesBlankLines) secondary.push(panel("Notes",prose(c.notes)+lines(c.notesBlankLines),{placement:"secondary",column:0,width:2}));
-  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><title>${e(c.name || "Character sheet")}</title><style>${sheetStyles(c.paper)}</style></head><body><main id="sheets"><article class="sheet-page"><header class="sheet-header"><div class="name-banner"><span class="field-label">Name</span><div class="name-line">${e(c.name)}</div></div><div class="identity">${c.identity.map(f => `<div class="identity-field"><span class="field-label">${e(f.label)}</span><span class="field-value">${e(f.value)}</span></div>`).join("")}</div></header><div class="sheet-panels">${primary.join("")}${secondary.join("")}</div>${renderFooter(siteUrl)}</article></main>${renderCardTemplates(c, siteUrl)}</body></html>`;
+  return `<!DOCTYPE html><html lang="en" data-layout-state="pending"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-character-sheet-layout-v1'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"><title>${e(c.name || "Character sheet")}</title><style>${sheetStyles(c.paper)}</style></head><body><main id="sheets"><article class="sheet-page"><header class="sheet-header"><div class="name-banner"><span class="field-label">Name</span><div class="name-line">${e(c.name)}</div></div><div class="identity">${c.identity.map(f => `<div class="identity-field"><span class="field-label">${e(f.label)}</span><span class="field-value">${e(f.value)}</span></div>`).join("")}</div></header><div class="sheet-panels">${primary.join("")}${secondary.join("")}</div>${renderFooter(siteUrl)}</article></main>${renderCardTemplates(c, siteUrl)}<script id="character-sheet-layout" nonce="character-sheet-layout-v1">${layoutRuntimeSource()}</script></body></html>`;
 }

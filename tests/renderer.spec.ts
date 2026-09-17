@@ -161,14 +161,15 @@ test('impossibly large boxes and cards give errors instead of splitting or clipp
   }
 });
 
-test('standalone Letter export escapes text and retains cards without scripts',async({page,browser})=>{
+test('standalone Letter export escapes text and retains self-layout cards',async({page,browser})=>{
   await ready(page);
   const attack='<script>alert(1)</script>';
   await render(page,{version:1,system:'generic',paper:'letter',features:[{name:attack,presentation:'card',description:'Literal <b>text</b>',usage:{resource:'Focus',amount:1}}]});
   const event=page.waitForEvent('download');
   await page.getByRole('button',{name:'HTML',exact:true}).last().click();
   const html=await readFile((await (await event).path())!,'utf8');
-  expect(html).not.toMatch(/<script[\s>]|<template/i);
+  expect(html).toContain('id="character-sheet-layout"');
+  expect(html).not.toMatch(/<template/i);
   const offline=await browser.newPage();
   await offline.context().setOffline(true);
   await offline.setContent(html);

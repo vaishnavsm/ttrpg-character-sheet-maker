@@ -66,7 +66,7 @@ Construct a `version: 1` character object; the smallest valid object is `{ "vers
 
 For uncertain or incrementally assembled data, call `validate_character` and fix the reported JSON Pointer paths. Unknown fields are rejected, text is escaped, and `resources[].used` cannot exceed `resources[].maximum`.
 
-Call `render_character_sheet` only after making the composition decisions above. Read the HTML from `structuredContent.html` when available, otherwise from the text result. The returned document is self-contained, script-free, and stateless.
+Call `render_character_sheet` only after making the composition decisions above. Read the HTML from `structuredContent.html` when available, otherwise from the text result. The returned document is self-contained and stateless. It includes a tightly scoped inline layout runtime that measures and positions the sheet when the file is opened; it needs no network connection, external assets, site workflow, or server-side browser.
 
 After rendering, check the outcome conceptually against these questions:
 

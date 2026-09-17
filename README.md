@@ -171,11 +171,11 @@ Each line reserves 6 mm, plus the heading and frame. Values range from 0 to 24; 
 ## Rendering and checks
 
 1. `renderCharacterJson(source)` parses and validates input through the shared sheet service.
-2. The service calls the pure `renderCharacterDocument(character)` renderer to create HTML with inline CSS and static SVG frames, plus inert card templates.
-3. `paginateDocument(document)` measures boxes in a browser, packs whole boxes and mixed cards, then numbers all pages and removes templates.
-4. The debug page previews, downloads, and prints the resulting script-free HTML. `POST /api/v1/render` exposes the same rendering service to HTTP clients.
+2. The service calls `renderCharacterDocument(character)` to create HTML with inline CSS, static SVG frames, card templates, and the dependency-free layout runtime.
+3. When the returned file opens, that runtime measures boxes, packs whole boxes and mixed cards, numbers pages, removes templates, and marks the document `data-layout-state="complete"`.
+4. The debug page, `POST /api/v1/render`, and MCP tool all use that same self-contained document contract.
 
-Pagination requires a browser DOM, so the API returns the deterministic pre-pagination document; a browser performs the final measured page packing when it previews or prints that HTML. Exported files have no external assets or fonts; input text is escaped and a restrictive content security policy is included. For a frozen layout across different machines, save to PDF in the browser that rendered it.
+Pagination uses the reader's browser DOM; the server does not launch a browser. The API/MCP response lays itself out when opened directly and does not depend on `/build` or private site code. Exported files have no external assets or fonts; input text is escaped and a restrictive content security policy permits only the embedded layout runtime. For a frozen layout across different machines, save to PDF in the browser that rendered it.
 
 ```sh
 npm run lint

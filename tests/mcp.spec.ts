@@ -3,6 +3,7 @@ import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/cli
 
 test("stateless MCP exposes its Markdown skill, validation, and shared renderer", async ({
   baseURL,
+  browser,
   request,
 }) => {
   const client = new Client(
@@ -41,6 +42,14 @@ test("stateless MCP exposes its Markdown skill, validation, and shared renderer"
       name: "Mira",
       system: "generic",
       attributes: [{ label: "Resolve", value: 12, modifier: "+1" }],
+      features: [
+        {
+          name: "Focus burst",
+          presentation: "card",
+          description: "Gain an edge on one check.",
+          usage: { resource: "Focus", amount: 1 },
+        },
+      ],
     };
     const rendered = await client.callTool({
       name: "render_character_sheet",
@@ -49,11 +58,26 @@ test("stateless MCP exposes its Markdown skill, validation, and shared renderer"
     const output = rendered.structuredContent as { html?: string; filename?: string } | undefined;
     expect(output?.html).toContain("<!DOCTYPE html>");
     expect(output?.html).toContain("Mira");
+    expect(output?.html).toContain('data-layout-state="pending"');
+    expect(output?.html).toContain('id="character-sheet-layout"');
     expect(output?.filename).toBe("mira-sheet.html");
 
     const apiRender = await request.post("/api/v1/render", { data: character });
     expect(apiRender.ok()).toBe(true);
     expect(await apiRender.text()).toBe(output?.html);
+
+    const standalone = await browser.newPage();
+    await standalone.setContent(output?.html ?? "");
+    await standalone.waitForFunction(
+      () => document.documentElement.dataset.layoutState !== "pending" &&
+        document.documentElement.dataset.layoutState !== "running",
+    );
+    expect(await standalone.locator("html").getAttribute("data-layout-state")).toBe("complete");
+    await expect(standalone.locator("template")).toHaveCount(0);
+    await expect(standalone.locator(".reference-card")).toHaveCount(1);
+    await expect(standalone.locator(".sheet-page")).toHaveCount(2);
+    expect(await standalone.locator(".panel").first().evaluate((panel) => panel.style.position)).toBe("absolute");
+    await standalone.close();
   } finally {
     await client.close();
   }
