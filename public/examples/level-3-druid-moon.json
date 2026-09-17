@@ -1,0 +1,529 @@
+{
+  "version": 1,
+  "name": "",
+  "system": "dnd-5e-2014",
+  "paper": "a4",
+  "identity": [
+    {
+      "label": "Class & level",
+      "value": "Druid 3"
+    },
+    {
+      "label": "Subclass",
+      "value": "Circle of the Moon"
+    },
+    {
+      "label": "Background",
+      "value": "Hermit"
+    },
+    {
+      "label": "Race",
+      "value": "Wood elf"
+    }
+  ],
+  "attributes": [
+    {
+      "label": "Strength",
+      "value": 8,
+      "modifier": "-1"
+    },
+    {
+      "label": "Dexterity",
+      "value": 16,
+      "modifier": "+3"
+    },
+    {
+      "label": "Constitution",
+      "value": 13,
+      "modifier": "+1"
+    },
+    {
+      "label": "Intelligence",
+      "value": 12,
+      "modifier": "+1"
+    },
+    {
+      "label": "Wisdom",
+      "value": 16,
+      "modifier": "+3"
+    },
+    {
+      "label": "Charisma",
+      "value": 10,
+      "modifier": "+0"
+    }
+  ],
+  "savingThrows": [
+    {
+      "name": "Strength",
+      "bonus": "-1",
+      "proficient": false
+    },
+    {
+      "name": "Dexterity",
+      "bonus": "+3",
+      "proficient": false
+    },
+    {
+      "name": "Constitution",
+      "bonus": "+1",
+      "proficient": false
+    },
+    {
+      "name": "Intelligence",
+      "bonus": "+3",
+      "proficient": true
+    },
+    {
+      "name": "Wisdom",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Charisma",
+      "bonus": "+0",
+      "proficient": false
+    }
+  ],
+  "skills": [
+    {
+      "name": "Animal Handling",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Medicine",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Perception",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Religion",
+      "bonus": "+3",
+      "proficient": true
+    },
+    {
+      "name": "Survival",
+      "bonus": "+5",
+      "proficient": true
+    }
+  ],
+  "defenses": [
+    {
+      "label": "Armor class",
+      "value": 16
+    },
+    {
+      "label": "Initiative",
+      "value": "+3"
+    },
+    {
+      "label": "Speed",
+      "value": "35 ft"
+    },
+    {
+      "label": "Proficiency",
+      "value": "+2"
+    },
+    {
+      "label": "Passive Perception",
+      "value": 15
+    }
+  ],
+  "hitPoints": {
+    "maximum": 21,
+    "hitDice": "3d8"
+  },
+  "personality": [],
+  "notes": "",
+  "notesBlankLines": 0,
+  "resources": [
+    {
+      "name": "Wild Shape",
+      "maximum": 2,
+      "recovery": "Short or long rest"
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Scimitar",
+      "bonus": "+5",
+      "damage": "1d6+3 slashing",
+      "notes": ""
+    }
+  ],
+  "features": [
+    {
+      "name": "Wild Shape: Brown Bear",
+      "description": "0 form HP → revert; excess damage carries over.\nMultiattack: make BOTH attacks.\nBite: +5, 1d8+4 piercing.\nClaws: +5, 2d6+4 slashing.",
+      "summary": "Fight",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": 1,
+        "resource": "Wild Shape use",
+        "recovery": "Short or long rest"
+      },
+      "details": [
+        {
+          "label": "Timing",
+          "value": "Bonus Action"
+        },
+        {
+          "label": "Duration",
+          "value": "Up to 1 hour"
+        },
+        {
+          "label": "Ac",
+          "value": 11
+        },
+        {
+          "label": "Hp",
+          "value": 34
+        },
+        {
+          "label": "Speed",
+          "value": "40 ft; climb 30 ft"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Wild Shape: Dire Wolf",
+      "description": "0 form HP → revert; excess damage carries over.\nBite: +5 → 2d6+3 piercing. STR save DC 13 or fall Prone.\nPack Tactics: Advantage on attacks if one of your allies is within 5 ft of the target.",
+      "summary": "Chase / Trip",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": 1,
+        "resource": "Wild Shape use",
+        "recovery": "Short or long rest"
+      },
+      "details": [
+        {
+          "label": "Timing",
+          "value": "Bonus Action"
+        },
+        {
+          "label": "Duration",
+          "value": "Up to 1 hour"
+        },
+        {
+          "label": "Ac",
+          "value": 14
+        },
+        {
+          "label": "Hp",
+          "value": 37
+        },
+        {
+          "label": "Speed",
+          "value": "50 ft"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Wild Shape: Giant Spider",
+      "description": "0 form HP → revert; excess damage carries over.\nClimb walls and ceilings.\nBite: +5 → 1d8+3 piercing + poison.\nWeb: +5 to hit, range 30/60 ft. Target becomes Restrained.",
+      "summary": "Scout / Web",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": 1,
+        "resource": "Wild Shape use",
+        "recovery": "Short or long rest"
+      },
+      "details": [
+        {
+          "label": "Timing",
+          "value": "Bonus Action"
+        },
+        {
+          "label": "Duration",
+          "value": "Up to 1 hour"
+        },
+        {
+          "label": "Ac",
+          "value": 14
+        },
+        {
+          "label": "Hp",
+          "value": 26
+        },
+        {
+          "label": "Speed",
+          "value": "30 ft; climb 30 ft"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Combat Wild Shape Healing",
+      "description": "While transformed: Bonus Action + 1 spell slot → heal 1d8 per slot level.\n1st → 1d8; 2nd → 2d8.",
+      "summary": "Bonus Action: spend a slot to heal your animal form.",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": 1,
+        "resource": "spell slot",
+        "recovery": "Long rest"
+      },
+      "details": [
+        {
+          "label": "Timing",
+          "value": "Bonus Action"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Wood Elf",
+      "description": "Darkvision 60 ft. Fey Ancestry: advantage against charm; magic cannot put you to sleep. Trance: no normal sleep. Fleet of Foot: 35 ft. Mask of the Wild: hide while lightly obscured by natural phenomena."
+    }
+  ],
+  "spellcasting": {
+    "ability": "Wisdom",
+    "saveDC": 13,
+    "attackBonus": "+5",
+    "slots": [
+      {
+        "level": "1st",
+        "total": 4
+      },
+      {
+        "level": "2nd",
+        "total": 2
+      }
+    ],
+    "spells": [
+      {
+        "name": "Guidance",
+        "description": "Target adds 1d4 to one ability check.",
+        "kind": "spell",
+        "presentation": "card",
+        "details": [
+          {
+            "label": "Casting Time",
+            "value": "Action"
+          },
+          {
+            "label": "Range",
+            "value": "Touch"
+          },
+          {
+            "label": "Duration",
+            "value": "Concentration, up to 1 min"
+          }
+        ],
+        "level": "Cantrip",
+        "usage": {
+          "amount": 0,
+          "resource": "None",
+          "frequency": "Unlimited"
+        }
+      },
+      {
+        "name": "Produce Flame",
+        "description": "Ranged spell attack: +5 → 1d8 fire. Can alternatively hold the flame as a light source.",
+        "kind": "spell",
+        "presentation": "card",
+        "details": [
+          {
+            "label": "Casting Time",
+            "value": "Action"
+          },
+          {
+            "label": "Range",
+            "value": "30 ft"
+          }
+        ],
+        "level": "Cantrip",
+        "usage": {
+          "amount": 0,
+          "resource": "None",
+          "frequency": "Unlimited"
+        }
+      },
+      {
+        "name": "Healing Word",
+        "description": "Heal 1d4 + 3. Excellent for waking up an unconscious ally.",
+        "kind": "spell",
+        "presentation": "card",
+        "details": [
+          {
+            "label": "Casting Time",
+            "value": "Bonus Action"
+          },
+          {
+            "label": "Range",
+            "value": "60 ft"
+          }
+        ],
+        "level": "1st",
+        "usage": {
+          "amount": 1,
+          "resource": "level 1 spell slot",
+          "recovery": "Long rest"
+        }
+      },
+      {
+        "name": "Entangle",
+        "description": "A 20-ft square becomes difficult terrain. Creatures there make STR save DC 13. Failure → Restrained.",
+        "kind": "spell",
+        "presentation": "card",
+        "details": [
+          {
+            "label": "Casting Time",
+            "value": "Action"
+          },
+          {
+            "label": "Range",
+            "value": "90 ft"
+          },
+          {
+            "label": "Duration",
+            "value": "Concentration"
+          },
+          {
+            "label": "Save",
+            "value": "STR DC 13"
+          }
+        ],
+        "level": "1st",
+        "usage": {
+          "amount": 1,
+          "resource": "level 1 spell slot",
+          "recovery": "Long rest"
+        }
+      },
+      {
+        "name": "Faerie Fire",
+        "description": "Affects a 20-ft cube. DEX save DC 13. On failure, the creature glows; attacks against it have advantage, and invisibility does not help it.",
+        "kind": "spell",
+        "presentation": "card",
+        "details": [
+          {
+            "label": "Casting Time",
+            "value": "Action"
+          },
+          {
+            "label": "Range",
+            "value": "60 ft"
+          },
+          {
+            "label": "Duration",
+            "value": "Concentration"
+          },
+          {
+            "label": "Save",
+            "value": "DEX DC 13"
+          }
+        ],
+        "level": "1st",
+        "usage": {
+          "amount": 1,
+          "resource": "level 1 spell slot",
+          "recovery": "Long rest"
+        }
+      },
+      {
+        "name": "Speak with Animals",
+        "description": "Communicate verbally with beasts.",
+        "kind": "spell",
+        "presentation": "card",
+        "details": [
+          {
+            "label": "Casting Time",
+            "value": "Action / Ritual (+10 min)"
+          },
+          {
+            "label": "Range",
+            "value": "Self"
+          },
+          {
+            "label": "Duration",
+            "value": "10 minutes"
+          }
+        ],
+        "level": "1st",
+        "usage": {
+          "amount": 1,
+          "resource": "level 1 spell slot",
+          "recovery": "Long rest",
+          "frequency": "Ritual: 0 slots"
+        },
+        "options": []
+      },
+      {
+        "name": "Moonbeam",
+        "description": "Creates a 5-ft-radius beam. A creature entering or starting there makes CON save DC 13. Failure: 2d10 radiant; success: half. On later turns you can use your action to move the beam up to 60 ft.",
+        "kind": "spell",
+        "presentation": "card",
+        "details": [
+          {
+            "label": "Casting Time",
+            "value": "Action"
+          },
+          {
+            "label": "Range",
+            "value": "120 ft"
+          },
+          {
+            "label": "Duration",
+            "value": "Concentration"
+          },
+          {
+            "label": "Save",
+            "value": "CON DC 13"
+          }
+        ],
+        "level": "2nd",
+        "usage": {
+          "amount": 1,
+          "resource": "level 2 spell slot",
+          "recovery": "Long rest"
+        }
+      },
+      {
+        "name": "Pass Without Trace",
+        "description": "You and nearby allies get +10 Stealth and are extremely difficult to track.",
+        "kind": "spell",
+        "presentation": "card",
+        "details": [
+          {
+            "label": "Casting Time",
+            "value": "Action"
+          },
+          {
+            "label": "Range",
+            "value": "Self"
+          },
+          {
+            "label": "Duration",
+            "value": "Concentration, up to 1 hour"
+          }
+        ],
+        "level": "2nd",
+        "usage": {
+          "amount": 1,
+          "resource": "level 2 spell slot",
+          "recovery": "Long rest"
+        }
+      }
+    ]
+  },
+  "proficiencies": [],
+  "equipment": [
+    "Leather armour",
+    "Wooden shield",
+    "Scimitar",
+    "Druidic focus",
+    "Explorer’s pack"
+  ],
+  "sections": []
+}

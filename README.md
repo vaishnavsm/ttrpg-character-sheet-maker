@@ -1,6 +1,6 @@
 # Folio — character sheet workshop
 
-A Next.js debug page that turns a character JSON specification into a printable, self-contained HTML document. Rendering runs locally in the browser. There are no model calls, agent endpoints, API keys, uploads, accounts, or persistence.
+A Next.js debug page that turns character JSON into printable, self-contained HTML. Rendering is local and deterministic: no model calls, agent endpoints, uploads, accounts, or persistence.
 
 ## Run
 
@@ -9,65 +9,129 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3010. Paste JSON or select an example, then click **Render character sheet** (Cmd/Ctrl + Enter). Download the HTML for an offline copy, or use **Print / PDF** to open the browser print dialog. Disable browser headers and footers; use the sheet's configured paper size and default/100% scale.
+Open http://localhost:3010. Paste JSON or select an example, then click **Render character sheet** (Cmd/Ctrl + Enter). Download the HTML or use **Print / PDF**. Disable browser-added headers and footers and print at 100% scale on the configured paper size.
 
-The setup follows the adjacent portfolio project: Next.js 16.3.3 App Router, React 19, TypeScript, ESLint, and Zod. No A2A dependencies are included.
+The stack follows the adjacent portfolio project: Next.js 16.3.3 App Router, React 19, TypeScript, ESLint, and Zod.
+
+## Corrected level-three party
+
+The selector includes five supplied 2014 D&D 5e characters. These files are the single source of their data and can also be downloaded at `/examples/<filename>`:
+
+| Character | JSON |
+| --- | --- |
+| Wood Elf Rogue — Thief | [level-3-rogue-thief.json](public/examples/level-3-rogue-thief.json) |
+| Human Monk — Way of the Open Hand | [level-3-monk-open-hand.json](public/examples/level-3-monk-open-hand.json) |
+| Wood Elf Druid — Circle of the Moon | [level-3-druid-moon.json](public/examples/level-3-druid-moon.json) |
+| Wood Elf Ranger — Hunter | [level-3-ranger-hunter.json](public/examples/level-3-ranger-hunter.json) |
+| Wood Elf Paladin — Oath of Devotion | [level-3-paladin-devotion.json](public/examples/level-3-paladin-devotion.json) |
+
+These use the user's revised data, including ranger INT 8 / Investigation +1 and the paladin's revised abilities, DC 12, +4 spell attack, three Divine Sense uses, three prepared spells plus two oath spells, and scale mail. They include the listed proficient skills, no Quirk/Ideal/Flaw/Notes boxes, and no beginner-turn boxes. The renderer does not audit game rules or invent missing choices.
+
+## Sheet layout
+
+- The printed name line is always blank. `name` is optional metadata for the debug page and download filename; it is not printed on sheets or cards.
+- There are no system/version subtitles, printing instructions, owner names, or group banners in the printed output.
+- Core stats, saves, skills, attacks, HP, resources, spellcasting numbers, and ability summaries are placed on the main page. Essential boxes cannot silently overflow onto later pages: rendering reports an error if they cannot fit.
+- Resource pools and spell slots sit beside HP. Resources can use circles or a handwritten remaining/maximum pool, with recovery information underneath.
+- After core content is placed, equipment, extra notes, and secondary boxes fill available main-page space before using later pages. Equipment uses a compact single-column box; Notes are double width by default.
+- Boxes and related groups are indivisible. Pagination compares three deterministic arrangements, choosing fewer pages and then fewer high-priority sections on later pages. It tries explicitly allowed widths before adding pages; it never shrinks text. This is a bounded heuristic, not a guarantee of the mathematical minimum. A box larger than a full page produces an error instead of being split or clipped.
 
 ## Character specification
 
-The smallest valid input is:
+Smallest input:
 
 ```json
-{
-  "version": 1,
-  "name": "A new adventurer",
-  "system": "generic"
-}
+{ "version": 1, "system": "generic" }
 ```
 
-See `src/lib/sheet/schema.ts` for the authoritative schema. Downloadable JSON examples are in `public/examples/`; a JSON Schema representation is in `public/character.schema.json` (the runtime Zod schema additionally checks that resource `used` does not exceed `maximum`). Unknown fields are rejected to prevent accidentally omitting misspelled content.
+`src/lib/sheet/schema.ts` is authoritative. `public/character.schema.json` is the downloadable JSON Schema; the runtime also checks that resource `used` does not exceed `maximum`. Unknown fields are rejected.
 
 | Field | Shape / purpose |
 | --- | --- |
 | `version` | `1` |
-| `name` | Character name |
+| `name` | Optional metadata; may be empty; not printed |
 | `system` | `dnd-5e-2014`, `dnd-5e-2024`, or `generic` |
-| `systemName` | Optional printed system label |
+| `systemName` | Optional debug metadata |
 | `paper` | `a4` (default) or `letter` |
-| `identity` | `[{ "label": "Class & level", "value": "Ranger · 3" }]` |
-| `attributes` | `[{ "label": "Dexterity", "value": 16, "modifier": "+3" }]`; modifier optional |
+| `identity` | `[{ "label": "Class & level", "value": "Ranger 3" }]` |
+| `attributes` | `[{ "label": "Dexterity", "value": 16, "modifier": "+3" }]` |
 | `defenses` | `[{ "label": "Armor class", "value": 15 }]` |
 | `savingThrows`, `skills` | `[{ "name": "Stealth", "bonus": "+5", "proficient": true }]` |
 | `hitPoints` | `{ "maximum": 28, "current": 20, "temporary": 0, "hitDice": "3d10" }`; only maximum required |
-| `resources` | `[{ "name": "Focus", "maximum": 5, "used": 1 }]`; used defaults to zero |
-| `attacks` | `[{ "name": "Longbow", "bonus": "+7", "damage": "1d8 + 3", "notes": "Range 150 / 600 ft" }]` |
-| `features` | `[{ "name": "Feature", "description": "Rules reminder or flavor" }]` |
+| `resources` | `[{ "name": "Ki", "maximum": 3, "used": 0, "recovery": "Short or long rest" }]`; `display` can be `circles` (default) or `pool` |
+| `attacks` | `[{ "name": "Longbow", "bonus": "+7", "damage": "1d8+3 piercing", "notes": "Range 150/600 ft" }]` |
+| `features` | Array of entries (see below) |
 | `equipment`, `proficiencies` | Arrays of strings |
-| `personality` | `[{ "label": "Bond", "text": "..." }]`; labels are freeform |
-| `spellcasting` | `{ "ability": "Intelligence", "saveDC": 13, "attackBonus": "+5", "slots": [{ "level": "1st", "total": 2 }], "spells": [{ "name": "Light", "level": "Cantrip", "description": "..." }] }` |
-| `sections` | `[{ "title": "Vows", "column": "right", "entries": [{ "name": "A promise", "description": "..." }] }]`; column can be left, middle, or right |
-| `notes` | Freeform text |
+| `personality` | `[{ "label": "Ideal", "text": "", "blankLines": 6 }]`; optional `placement`: `main` or `secondary` (default) |
+| `spellcasting` | `{ "ability": "Wisdom", "saveDC": 13, "attackBonus": "+5", "slots": [{ "level": "1st", "total": 4 }], "spells": [...] }` |
+| `sections` | Named boxes with `title`, optional `entries`, `blankLines`, `column` (`left`/`middle`/`right`), `width` (1/2/3), and `placement` (`main`/`secondary`, default secondary) |
+| `notes`, `notesBlankLines` | Freeform notes and handwriting space (default five lines) |
 
-Numeric display values may be strings or finite numbers. Omit `hitPoints.current` and `temporary` for empty pencil fields; zero is printed as zero. Resource circles marked with an × represent spent uses. Filled skill circles represent proficiency.
+Display values can be strings or finite numbers. Omitted HP current/temporary values remain empty; zero is printed as zero. All scores and bonuses are supplied, not calculated. The D&D profiles add death saves when HP is present; generic does not.
 
-These are **display profiles**, not rules engines. Both D&D editions use the same ornamental layout, with their own system labels and example data. D&D profiles add death-save tracks when hit points are provided. The generic profile allows arbitrary labels without D&D-only fields. All scores, modifiers, DCs, bonuses, and selected abilities must be supplied; examples are illustrative, incomplete builds, not rules-validated characters.
+## Cards, resource costs, and alternate options
 
-## Rendering pipeline
+Entries in `features`, `spellcasting.spells`, and custom sections support:
 
-1. `parseCharacter(source)` validates JSON and reports field paths.
-2. `renderCharacterDocument(character)` creates the initial HTML with inline CSS and static SVG artwork.
-3. `paginateDocument(document)` measures the HTML in a browser iframe, splits sections at row/text boundaries, repeats section titles on continuation pages, and numbers the pages.
-4. The debug page previews and downloads that final, script-free HTML.
+- `name` and `description`.
+- `presentation`: `list` (default) or `card`.
+- `kind`: the prominent card header, such as `spell`, `ability`, or `trait`.
+- `summary`: a short main-sheet description of an ability whose full rules live on a card.
+- `details`: label/value pairs such as range, timing, and duration.
+- `usage`: resource name, amount, optional frequency, and optional recovery.
+- `options`: alternate modes of the **same ability**, each with a name, description, optional details, and optional usage override.
+- `blankLines`: additional handwriting space.
 
-`renderCharacterDocument` is browser-independent, but its raw output must be paginated before export. Pagination requires a browser DOM; this version is not a server rendering endpoint. The two rendering functions are separated from the debug UI so a future browser-based export worker can use them.
+For example:
 
-The sheet uses three independently flowing columns. Long content continues in the same column on later pages; this preserves section positions and may leave other columns empty. Font sizes remain fixed. There is a 60-page cap and bounded input fields; layout failures leave the previous successful preview intact and report an error. Export buttons are disabled while the JSON differs from the rendered version.
+```json
+{
+  "name": "Channel Divinity",
+  "presentation": "card",
+  "kind": "ability",
+  "summary": "Choose Sacred Weapon or Turn the Unholy.",
+  "usage": {
+    "resource": "Channel Divinity use",
+    "amount": 1,
+    "recovery": "Short or long rest"
+  },
+  "options": [
+    { "name": "Sacred Weapon", "description": "..." },
+    { "name": "Turn the Unholy", "description": "..." }
+  ]
+}
+```
 
-Original vector ornaments are in `src/lib/sheet/ornaments.ts`. The panel border uses a static nine-slice SVG border image. There is no runtime image generation, remote artwork, external font dependency, or JavaScript in exported sheets. Input text is escaped and the export includes a restrictive content security policy.
+`usage.amount: 0` explicitly means no resource spent. An ability can still have `frequency: "Once per turn"` or `"Once per day"`. Variable pools may use a string amount such as `"1 per HP healed"`. Options inherit the parent resource cost unless an override is supplied. The druid's ritual casting timing and zero-slot cost use compact inline notation. Wild Shape has three separate form cards; other alternate modes can share a card.
 
-The preview and print output use the same paginated document. Pagination is measured in the current browser with local fonts; another browser or machine can substitute fonts and slightly change wrapping. For a frozen artifact, save to PDF in the browser that rendered it.
+All card types pack into the same cutting pages after the character sheets. There are no type-separated pages or owner labels. Every cutout card is 88 × 110 mm, with four cards per cutting page on A4 or Letter. Cards never become double width or change height to fit their text. Content that exceeds the fixed size returns an error: condense it, split it into separate entries, or render it as a list. Dashed outlines mark the cut boundary.
 
-## Validation
+For D&D spell cards, omitted usage is inferred only for numbered spell levels (one corresponding slot, long-rest recovery) and cantrips (no slot, unlimited). Other systems must supply usage. Legacy `details` with a Cost label is displayed prominently; otherwise an unspecified card cost is identified as unspecified, never assumed to be free.
+
+## Intentionally empty boxes
+
+Omit text or provide `""`, then choose `blankLines`:
+
+```json
+"personality": [
+  { "label": "Ideal", "text": "", "blankLines": 6 },
+  { "label": "Flaw", "blankLines": 4 }
+],
+"sections": [
+  { "title": "Equipment sketch", "width": 2, "blankLines": 8 }
+]
+```
+
+Each line reserves 6 mm, plus the heading and frame. Values range from 0 to 24; zero adds no writing space. No placeholder prose is generated. The entire box moves together when needed.
+
+## Rendering and checks
+
+1. `parseCharacter(source)` validates input.
+2. `renderCharacterDocument(character)` creates HTML with inline CSS and static SVG frames, plus inert card templates.
+3. `paginateDocument(document)` measures boxes in a browser, packs whole boxes and mixed cards, then numbers all pages and removes templates.
+4. The debug page previews, downloads, and prints the resulting script-free HTML.
+
+Pagination requires a browser DOM. There is no server rendering endpoint. Exported files have no external assets or fonts; input text is escaped and a restrictive content security policy is included. For a frozen layout across different machines, save to PDF in the browser that rendered it.
 
 ```sh
 npm run lint
@@ -77,4 +141,32 @@ npx playwright install chromium
 npm test
 ```
 
-The browser tests cover the initial render, malformed and invalid JSON, stale export prevention, all examples, long-content pagination, escaped input, standalone offline HTML, Letter sizing, PDF generation, and mobile overflow.
+Browser tests cover all five revised premades on A4 and Letter, first-page resources and abilities, blank names, clean card pages, alternate modes, resource costs, mixed-card packing, unsplit wide boxes, invalid input, oversized-content errors, standalone exports, and mobile layout.
+
+## Reusable layout rules
+
+Attacks and spellcasting form an adjacent group; HP and resources form another. Core sections must fit page one. Other main sections have priority 60 and secondary sections priority 20 by default. Custom sections default to priority 30; higher numbers are placed first within their placement tier. `column` is a preference rather than a fixed position.
+
+Custom sections accept:
+
+```json
+{
+  "title": "Inventory",
+  "placement": "secondary",
+  "priority": 40,
+  "width": 1,
+  "allowedWidths": [1, 2],
+  "group": "travel",
+  "entries": [{ "name": "Supplies", "description": "Rope, lantern, rations" }]
+}
+```
+
+Sections with the same `group` stay adjacent on the same page and must share an allowed width. `offense` and `vitality` are built-in group names; use other names for custom groups. A group's highest member priority applies. If any member is core, the whole group must fit page one. Without `allowedWidths`, `width` is fixed. Equipment permits one or two columns automatically.
+
+Empty personality sections, empty custom sections, and Notes are omitted unless text or an explicit positive `blankLines` / `notesBlankLines` is supplied. This changes the previous default of automatically reserving note lines.
+
+Entries accept `optionLayout`: `stacked` (default, headings within one card), `compact` (inline option text and costs), or `cards` (one fixed-size card per option, repeating the shared description/details and inheriting its cost unless overridden). These are deterministic formatting choices; the renderer does not rewrite rules or abbreviate arbitrary prose. Supply concise timing such as `Action / Ritual (+10 min)` in `details` and state the zero-slot ritual cost explicitly. All cards remain 88 × 110 mm; oversized content reports an error.
+
+## Page attribution
+
+Set `SITE_URL=https://your-domain.example` in `.env.local` or your deployment environment. Every sheet and cutting page then includes “Generated using” and the clickable URL; it is also retained in downloaded HTML and printed PDFs. With no value configured, attribution is omitted. The server reads this variable at request time (not baked into the client build); restart the server after changing its environment. Only absolute HTTP(S) URLs without credentials are accepted.

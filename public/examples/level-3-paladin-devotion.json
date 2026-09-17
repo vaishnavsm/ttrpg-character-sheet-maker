@@ -1,0 +1,439 @@
+{
+  "version": 1,
+  "name": "",
+  "system": "dnd-5e-2014",
+  "paper": "a4",
+  "identity": [
+    {
+      "label": "Class & level",
+      "value": "Paladin 3"
+    },
+    {
+      "label": "Subclass",
+      "value": "Oath of Devotion"
+    },
+    {
+      "label": "Background",
+      "value": "Noble"
+    },
+    {
+      "label": "Race",
+      "value": "Wood elf"
+    }
+  ],
+  "attributes": [
+    {
+      "label": "Strength",
+      "value": 8,
+      "modifier": "-1"
+    },
+    {
+      "label": "Dexterity",
+      "value": 17,
+      "modifier": "+3"
+    },
+    {
+      "label": "Constitution",
+      "value": 14,
+      "modifier": "+2"
+    },
+    {
+      "label": "Intelligence",
+      "value": 8,
+      "modifier": "-1"
+    },
+    {
+      "label": "Wisdom",
+      "value": 11,
+      "modifier": "+0"
+    },
+    {
+      "label": "Charisma",
+      "value": 15,
+      "modifier": "+2"
+    }
+  ],
+  "savingThrows": [
+    {
+      "name": "Strength",
+      "bonus": "-1",
+      "proficient": false
+    },
+    {
+      "name": "Dexterity",
+      "bonus": "+3",
+      "proficient": false
+    },
+    {
+      "name": "Constitution",
+      "bonus": "+2",
+      "proficient": false
+    },
+    {
+      "name": "Intelligence",
+      "bonus": "-1",
+      "proficient": false
+    },
+    {
+      "name": "Wisdom",
+      "bonus": "+2",
+      "proficient": true
+    },
+    {
+      "name": "Charisma",
+      "bonus": "+4",
+      "proficient": true
+    }
+  ],
+  "skills": [
+    {
+      "name": "History",
+      "bonus": "+1",
+      "proficient": true
+    },
+    {
+      "name": "Insight",
+      "bonus": "+2",
+      "proficient": true
+    },
+    {
+      "name": "Medicine",
+      "bonus": "+2",
+      "proficient": true
+    },
+    {
+      "name": "Perception",
+      "bonus": "+2",
+      "proficient": true
+    },
+    {
+      "name": "Persuasion",
+      "bonus": "+4",
+      "proficient": true
+    }
+  ],
+  "defenses": [
+    {
+      "label": "Armor class",
+      "value": 18
+    },
+    {
+      "label": "Initiative",
+      "value": "+3"
+    },
+    {
+      "label": "Speed",
+      "value": "35 ft"
+    },
+    {
+      "label": "Proficiency",
+      "value": "+2"
+    },
+    {
+      "label": "Passive Perception",
+      "value": 12
+    }
+  ],
+  "hitPoints": {
+    "maximum": 28,
+    "hitDice": "3d10"
+  },
+  "personality": [],
+  "notes": "",
+  "notesBlankLines": 0,
+  "attacks": [
+    {
+      "name": "Rapier",
+      "bonus": "+5",
+      "damage": "1d8+5 piercing",
+      "notes": "+3 DEX and +2 Dueling Fighting Style"
+    },
+    {
+      "name": "Longbow",
+      "bonus": "+5",
+      "damage": "1d8+3 piercing",
+      "notes": "Range 150/600 ft. Put the shield away first."
+    }
+  ],
+  "resources": [
+    {
+      "name": "Lay on Hands",
+      "maximum": 15,
+      "display": "pool",
+      "recovery": "Long rest"
+    },
+    {
+      "name": "Divine Sense",
+      "maximum": 3,
+      "recovery": "Long rest"
+    },
+    {
+      "name": "Channel Divinity",
+      "maximum": 1,
+      "recovery": "Short or long rest"
+    }
+  ],
+  "features": [
+    {
+      "name": "Dueling",
+      "description": "+2 melee damage; included in Rapier damage."
+    },
+    {
+      "name": "Divine Health",
+      "description": "Immune to disease."
+    },
+    {
+      "name": "Scale mail",
+      "description": "Disadvantage on Stealth checks."
+    },
+    {
+      "name": "Lay on Hands",
+      "description": "Action • Touch\nHeal: spend 1 pool HP per HP restored.\nCleanse: spend 5 pool HP → cure one disease or neutralize one poison.\nShared pool: 15 HP.",
+      "summary": "Action, touch: heal or cleanse from your 15 HP pool.",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": "Variable",
+        "resource": "Lay on Hands HP",
+        "recovery": "Long rest"
+      },
+      "details": [
+        {
+          "label": "Timing",
+          "value": "Action"
+        },
+        {
+          "label": "Range",
+          "value": "Touch"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Divine Sense",
+      "description": "Detect nearby Celestials, Fiends, and Undead until the end of your next turn.",
+      "summary": "Detect Celestials, Fiends, and Undead.",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": 1,
+        "resource": "Divine Sense use",
+        "recovery": "Long rest"
+      },
+      "details": [
+        {
+          "label": "Timing",
+          "value": "Action"
+        }
+      ]
+    },
+    {
+      "name": "Channel Divinity",
+      "description": "Action → choose one:",
+      "summary": "Choose Sacred Weapon or Turn the Unholy.",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": 1,
+        "resource": "Channel Divinity use",
+        "recovery": "Short or long rest"
+      },
+      "details": [],
+      "options": [
+        {
+          "name": "Sacred Weapon",
+          "description": "1 min: Rapier +2 attack → +7 to hit; magical; emits light.",
+          "details": []
+        },
+        {
+          "name": "Turn the Unholy",
+          "description": "Present holy symbol → nearby Fiends/Undead: WIS DC 12 or flee.",
+          "details": []
+        }
+      ]
+    },
+    {
+      "name": "Divine Smite",
+      "description": "After your Rapier hits, you may spend one Level 1 spell slot for +2d8 radiant damage. If the enemy is a Fiend or Undead, deal +3d8 radiant instead. You decide after you know the attack hit.",
+      "summary": "After a hit: +2d8 radiant; fiend/undead: +3d8.",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": 1,
+        "resource": "level 1 spell slot",
+        "recovery": "Long rest"
+      },
+      "details": [
+        {
+          "label": "Trigger",
+          "value": "After your Rapier hits"
+        }
+      ]
+    },
+    {
+      "name": "Wood Elf",
+      "description": "Darkvision 60 ft. Fey Ancestry: advantage against charm; magic cannot put you to sleep. Trance: no normal sleep. Fleet of Foot: 35 ft. Mask of the Wild: hide while lightly obscured by natural phenomena."
+    }
+  ],
+  "spellcasting": {
+    "ability": "Charisma",
+    "saveDC": 12,
+    "attackBonus": "+4",
+    "slots": [
+      {
+        "level": "1st",
+        "total": 3
+      }
+    ],
+    "spells": [
+      {
+        "name": "Bless",
+        "description": "Choose up to 3 creatures. They add 1d4 to attack rolls and saving throws.",
+        "kind": "spell",
+        "presentation": "card",
+        "details": [
+          {
+            "label": "Casting Time",
+            "value": "Action"
+          },
+          {
+            "label": "Range",
+            "value": "30 ft"
+          },
+          {
+            "label": "Duration",
+            "value": "Concentration, up to 1 minute"
+          }
+        ],
+        "level": "1st",
+        "usage": {
+          "amount": 1,
+          "resource": "level 1 spell slot",
+          "recovery": "Long rest"
+        }
+      },
+      {
+        "name": "Cure Wounds",
+        "description": "Heal 1d8 + 2.",
+        "kind": "spell",
+        "presentation": "card",
+        "details": [
+          {
+            "label": "Casting Time",
+            "value": "Action"
+          },
+          {
+            "label": "Range",
+            "value": "Touch"
+          }
+        ],
+        "level": "1st",
+        "usage": {
+          "amount": 1,
+          "resource": "level 1 spell slot",
+          "recovery": "Long rest"
+        }
+      },
+      {
+        "name": "Shield of Faith",
+        "description": "Target gains +2 AC.",
+        "kind": "spell",
+        "presentation": "card",
+        "details": [
+          {
+            "label": "Casting Time",
+            "value": "Bonus Action"
+          },
+          {
+            "label": "Range",
+            "value": "60 ft"
+          },
+          {
+            "label": "Duration",
+            "value": "Concentration, up to 10 minutes"
+          }
+        ],
+        "level": "1st",
+        "usage": {
+          "amount": 1,
+          "resource": "level 1 spell slot",
+          "recovery": "Long rest"
+        }
+      },
+      {
+        "name": "Protection from Evil and Good",
+        "description": "Protects against aberrations, celestials, elementals, fey, fiends, and undead. Those creatures have disadvantage on attacks against the target, and have difficulty charming, frightening, or possessing them.",
+        "kind": "spell",
+        "presentation": "card",
+        "details": [
+          {
+            "label": "Casting Time",
+            "value": "Action"
+          },
+          {
+            "label": "Range",
+            "value": "Touch"
+          },
+          {
+            "label": "Duration",
+            "value": "Concentration, up to 10 minutes"
+          },
+          {
+            "label": "Preparation",
+            "value": "Always prepared"
+          }
+        ],
+        "level": "1st · Oath",
+        "usage": {
+          "amount": 1,
+          "resource": "level 1 spell slot",
+          "recovery": "Long rest"
+        }
+      },
+      {
+        "name": "Sanctuary",
+        "description": "Enemies trying to attack the protected creature must make WIS save DC 12 or choose another target / lose the attack. Ends early if the protected creature attacks or harms an enemy with a spell.",
+        "kind": "spell",
+        "presentation": "card",
+        "details": [
+          {
+            "label": "Casting Time",
+            "value": "Bonus Action"
+          },
+          {
+            "label": "Range",
+            "value": "30 ft"
+          },
+          {
+            "label": "Duration",
+            "value": "1 minute"
+          },
+          {
+            "label": "Preparation",
+            "value": "Always prepared"
+          },
+          {
+            "label": "Save",
+            "value": "WIS DC 12"
+          }
+        ],
+        "level": "1st · Oath",
+        "usage": {
+          "amount": 1,
+          "resource": "level 1 spell slot",
+          "recovery": "Long rest"
+        }
+      }
+    ]
+  },
+  "proficiencies": [],
+  "equipment": [
+    "Scale mail",
+    "Shield",
+    "Rapier",
+    "Longbow + arrows",
+    "Holy symbol",
+    "Explorer’s pack"
+  ],
+  "sections": []
+}

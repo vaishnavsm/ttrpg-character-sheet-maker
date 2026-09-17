@@ -60,7 +60,59 @@ h1 { font-size: 22pt; line-height: 1.03; margin: 0; font-weight: normal; overflo
 .list-row { padding: .8mm 0; border-bottom: .5px solid #ddd; font-size: 8.2pt; overflow-wrap: anywhere; white-space: pre-wrap; }
 .write-line { height: 6mm; border-bottom: .5px solid #ccc; }
 .sheet-footer { display: flex; justify-content: space-between; gap: 3mm; border-top: .6px solid #777; padding-top: 2mm; font-size: 5.5pt; letter-spacing: .06em; }
-.sheet-footer span { overflow-wrap: anywhere; }
+.sheet-footer span { overflow-wrap: anywhere; min-height: 1lh; }
+.writing-space { break-inside: avoid; }
+/* Whole-box sheet layout. */
+.sheet-header { min-height: 20mm; padding-bottom: 3mm; }
+.name-banner { padding: 1mm 2mm; border: none; }
+.name-banner::after { display: none; }
+.name-line { height: 12mm; border-bottom: 1px solid #555; }
+.sheet-panels { position: relative; min-height: 0; }
+.secondary-page { grid-template-rows: minmax(0, 1fr) auto; }
+.panel { margin: 0; }
+.attribute-grid { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 2mm; }
+.attribute { min-height: 18mm; padding: 1.5mm .5mm; }
+.attribute-main { font-size: 18pt; }
+.attribute-label { font-size: 5.2pt; }
+.entry + .entry { margin-top: 2mm; }
+.entry-title { margin-top: 0; }
+.sheet-footer { justify-content: flex-end; text-transform: none; }
+.sheet-attribution { margin-right: auto; }
+.sheet-attribution a { color: inherit; text-decoration: underline; }
+.recovery { display: block; margin-top: 1mm; font: 6.5pt/1.35 Arial, sans-serif; }
+.resource-tracks .tracker { border-bottom: .5px solid #aaa; margin-bottom: 1mm; padding-bottom: 2mm; }
+.resource-tracks .tracker:last-child { border-bottom: none; margin: 0; }
+.resource-tracks .tracker-label { font-size: 9pt; }
+.pool-value { font-size: 16pt; padding: 2mm 0; }
+.spell-stats { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 2mm; align-items: center; }
+.spell-stats strong { font-size: 15pt; }
+.ability-summary { margin-bottom: 2mm; }
+.ability-summary strong { display: block; font-size: 9pt; }
+.ability-summary small { font: 6.5pt/1.3 Arial, sans-serif; }
+.equipment-list { display: grid; grid-template-columns: 1fr 1fr; column-gap: 5mm; }
+.equipment-list .writing-space { grid-column: 1 / -1; }
+/* All card types share the same cutting grid. */
+.card-page { grid-template-rows: minmax(0, 1fr) auto; gap: 4mm; }
+.card-grid { position: relative; min-height: 0; }
+.reference-card { width: 88mm; height: 110mm; border: .7px dashed #555; padding: 2mm; break-inside: avoid; }
+.card-inner { height: 100%; border: 2mm solid transparent; border-image: url("data:image/svg+xml,${encodeURIComponent(frameSvg)}") 20 stretch; padding: 2mm; }
+.card-content { height: 100%; min-height: 0; overflow-wrap: anywhere; }
+.reference-card-header { margin-bottom: 2mm; }
+.card-kind { border-block: 1.5pt solid #272623; padding: 1.2mm 0; font: 800 11pt/1.2 Arial, sans-serif; text-transform: uppercase; letter-spacing: .18em; }
+.reference-card h3 { font-size: 17pt; line-height: 1.1; font-weight: normal; margin: 2mm 0 0; }
+.card-usage { border: 1px solid #555; padding: 1.5mm 2mm; margin: 0 0 2mm; font: 8pt/1.4 Arial, sans-serif; }
+.card-usage strong { display: block; font-size: 10pt; }
+.card-usage span { display: block; }
+.card-details { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5mm 4mm; margin: 0 0 2mm; }
+.card-details > div { min-width: 0; }
+.card-details dt { font: 6pt/1.4 Arial, sans-serif; text-transform: uppercase; letter-spacing: .06em; }
+.card-details dd { margin: .5mm 0 0; font-size: 9pt; }
+.card-description { white-space: pre-wrap; font-size: 9pt; line-height: 1.4; }
+.card-options { display: grid; grid-template-columns: repeat(auto-fit,minmax(40mm,1fr)); gap: 4mm; margin-top: 3mm; }
+.card-option { min-width: 0; border-top: 1px solid #555; padding-top: 2mm; }
+.card-option h4 { font-size: 11pt; margin: 0 0 2mm; }
+.card-option .card-details { grid-template-columns: 1fr 1fr; }
+.card-option .card-usage { padding: 1mm; }
 @media screen { body { padding: 0; } .sheet-page { box-shadow: 0 2px 9px #00000012; } }
 @media print { html, body { background: white; } .sheet-page { margin: 0; box-shadow: none; } }
 `;

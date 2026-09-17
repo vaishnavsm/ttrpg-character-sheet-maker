@@ -1,0 +1,253 @@
+{
+  "version": 1,
+  "name": "",
+  "system": "dnd-5e-2014",
+  "paper": "a4",
+  "identity": [
+    {
+      "label": "Class & level",
+      "value": "Rogue 3"
+    },
+    {
+      "label": "Subclass",
+      "value": "Thief"
+    },
+    {
+      "label": "Background",
+      "value": "Criminal"
+    },
+    {
+      "label": "Race",
+      "value": "Wood elf"
+    },
+    {
+      "label": "Size",
+      "value": "Medium"
+    }
+  ],
+  "attributes": [
+    {
+      "label": "Strength",
+      "value": 8,
+      "modifier": "-1"
+    },
+    {
+      "label": "Dexterity",
+      "value": 17,
+      "modifier": "+3"
+    },
+    {
+      "label": "Constitution",
+      "value": 14,
+      "modifier": "+2"
+    },
+    {
+      "label": "Intelligence",
+      "value": 12,
+      "modifier": "+1"
+    },
+    {
+      "label": "Wisdom",
+      "value": 14,
+      "modifier": "+2"
+    },
+    {
+      "label": "Charisma",
+      "value": 10,
+      "modifier": "+0"
+    }
+  ],
+  "savingThrows": [
+    {
+      "name": "Strength",
+      "bonus": "-1",
+      "proficient": false
+    },
+    {
+      "name": "Dexterity",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Constitution",
+      "bonus": "+2",
+      "proficient": false
+    },
+    {
+      "name": "Intelligence",
+      "bonus": "+3",
+      "proficient": true
+    },
+    {
+      "name": "Wisdom",
+      "bonus": "+2",
+      "proficient": false
+    },
+    {
+      "name": "Charisma",
+      "bonus": "+0",
+      "proficient": false
+    }
+  ],
+  "skills": [
+    {
+      "name": "Acrobatics",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Deception",
+      "bonus": "+2",
+      "proficient": true
+    },
+    {
+      "name": "Insight",
+      "bonus": "+4",
+      "proficient": true
+    },
+    {
+      "name": "Investigation",
+      "bonus": "+3",
+      "proficient": true
+    },
+    {
+      "name": "Perception ★",
+      "bonus": "+6",
+      "proficient": true
+    },
+    {
+      "name": "Sleight of Hand",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Stealth ★",
+      "bonus": "+7",
+      "proficient": true
+    }
+  ],
+  "defenses": [
+    {
+      "label": "Armor class",
+      "value": 15
+    },
+    {
+      "label": "Initiative",
+      "value": "+3"
+    },
+    {
+      "label": "Speed",
+      "value": "35 ft"
+    },
+    {
+      "label": "Proficiency",
+      "value": "+2"
+    },
+    {
+      "label": "Passive Perception",
+      "value": 16
+    }
+  ],
+  "hitPoints": {
+    "maximum": 24,
+    "hitDice": "3d8"
+  },
+  "personality": [],
+  "notes": "",
+  "notesBlankLines": 0,
+  "attacks": [
+    {
+      "name": "Shortsword",
+      "bonus": "+5",
+      "damage": "1d6+3 piercing",
+      "notes": ""
+    },
+    {
+      "name": "Shortbow",
+      "bonus": "+5",
+      "damage": "1d6+3 piercing",
+      "notes": "Range 80/320 ft"
+    },
+    {
+      "name": "Dagger",
+      "bonus": "+5",
+      "damage": "1d4+3 piercing",
+      "notes": "Range 20/60 ft"
+    }
+  ],
+  "features": [
+    {
+      "name": "Sneak Attack",
+      "description": "Add 2d6 damage if you have Advantage on the attack, or one of your allies is within 5 ft of the target and you do not have Disadvantage.",
+      "summary": "+2d6 damage on a qualifying hit.",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": 0,
+        "resource": "None",
+        "frequency": "Once per turn"
+      },
+      "details": []
+    },
+    {
+      "name": "Cunning Action",
+      "description": "Every turn, you may use your Bonus Action to choose one option.\nDash: Take the Dash action.\nDisengage: Take the Disengage action.\nHide: Take the Hide action.",
+      "summary": "Bonus Action: Dash, Disengage, or Hide.",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": 0,
+        "resource": "None",
+        "frequency": "Every turn"
+      },
+      "details": [
+        {
+          "label": "Timing",
+          "value": "Bonus Action"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Fast Hands",
+      "description": "You may also use your Bonus Action for any of these options.\nPick a lock: Pick a lock.\nDisarm a trap: Disarm a trap.\nSleight of Hand: Make a Sleight of Hand check.\nUse an object: Use an ordinary object.",
+      "summary": "Bonus Action: locks, traps, sleight of hand, objects.",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": 0,
+        "resource": "None"
+      },
+      "details": [
+        {
+          "label": "Timing",
+          "value": "Bonus Action"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Second-Story Work",
+      "description": "Climbing costs no extra movement. You can jump farther than normal."
+    },
+    {
+      "name": "Expertise",
+      "description": "Double proficiency bonus for Perception and Stealth."
+    },
+    {
+      "name": "Wood Elf",
+      "description": "Darkvision 60 ft. Fey Ancestry: advantage against charm; magic cannot put you to sleep. Trance: no normal sleep. Fleet of Foot: 35 ft. Mask of the Wild: hide while lightly obscured by natural phenomena."
+    }
+  ],
+  "proficiencies": [],
+  "equipment": [
+    "Studded leather",
+    "Shortsword",
+    "Shortbow",
+    "20 arrows",
+    "2 daggers",
+    "Thieves’ tools",
+    "Burglar’s pack"
+  ],
+  "sections": []
+}

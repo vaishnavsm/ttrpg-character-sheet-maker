@@ -1,4 +1,19 @@
 import type { CharacterInput } from "./schema";
+import { characterSchema } from "./schema";
+import rogue from "../../../public/examples/level-3-rogue-thief.json";
+import monk from "../../../public/examples/level-3-monk-open-hand.json";
+import druid from "../../../public/examples/level-3-druid-moon.json";
+import rangerPremade from "../../../public/examples/level-3-ranger-hunter.json";
+import paladin from "../../../public/examples/level-3-paladin-devotion.json";
+
+// The downloadable JSON files are the single source for these supplied characters.
+export const premadeExamples = [
+  { id: "level-3-rogue-thief", label: "Level 3 · Wood Elf Rogue — Thief", character: characterSchema.parse(rogue) },
+  { id: "level-3-monk-open-hand", label: "Level 3 · Human Monk — Open Hand", character: characterSchema.parse(monk) },
+  { id: "level-3-druid-moon", label: "Level 3 · Wood Elf Druid — Moon", character: characterSchema.parse(druid) },
+  { id: "level-3-ranger-hunter", label: "Level 3 · Wood Elf Ranger — Hunter", character: characterSchema.parse(rangerPremade) },
+  { id: "level-3-paladin-devotion", label: "Level 3 · Wood Elf Paladin — Devotion", character: characterSchema.parse(paladin) },
+];
 
 const ranger: CharacterInput = {
   version: 1,
@@ -87,4 +102,23 @@ export const examples: { id: string; label: string; character: CharacterInput }[
     sections: [{ title: "Vows", column: "right", entries: [{ name: "Find the missing lightship", description: "Last seen beyond the eastern shoals, three nights before the storm." }] }, { title: "Companions", column: "middle", entries: [{ name: "Brine", description: "An elderly gull with a talent for finding trouble." }] }],
     personality: [{ label: "Trouble", text: "The sea has started returning things I have lost." }],
   } },
+  { id: "cards", label: "Cards & blank boxes", character: {
+    version: 1, name: "Ari Windstep", system: "generic", systemName: "Wayfarer · sample rules", paper: "a4",
+    identity: [{ label: "Calling", value: "Wandering adept" }, { label: "Home", value: "The Lantern Isles" }],
+    attributes: [{ label: "Body", value: 2 }, { label: "Mind", value: 3 }, { label: "Spirit", value: 4 }],
+    resources: [{ name: "Focus", maximum: 5 }],
+    features: [
+      { name: "Sure-footed", kind: "trait", presentation: "list", description: "You know how to find firm footing on narrow paths. Keep this permanent trait on your main sheet." },
+      { name: "Windstep", kind: "ability", presentation: "card", details: [{ label: "Cost", value: "1 focus point" }, { label: "Timing", value: "On your turn" }, { label: "Range", value: "Self" }, { label: "Duration", value: "One movement" }], description: "Move lightly across a precarious surface without disturbing it. Describe how you use the wind to carry yourself across.\n\nMark the spent focus on your character sheet. This is an illustrative ability for the sample system." },
+      { name: "Stillwater", kind: "ability", presentation: "card", details: [{ label: "Cost", value: "2 focus points" }, { label: "Timing", value: "When threatened" }], description: "Take a steadying breath and quiet your thoughts. Write your table’s agreed effect in the space below.", blankLines: 4 },
+    ],
+    spellcasting: { ability: "Spirit", saveDC: 12, attackBonus: "+4", spells: [
+      { name: "Lantern Mote", level: "Minor", presentation: "card", details: [{ label: "Cost", value: "None" }, { label: "Range", value: "Within reach" }, { label: "Duration", value: "One scene" }], description: "Call a tiny light into your palm. It follows you until you dismiss it or the scene ends. Choose the color and shape of the light when you cast it." },
+      { name: "Thread of Dawn", level: "1", presentation: "card", details: [{ label: "Cost", value: "1 focus point" }, { label: "Range", value: "A nearby ally" }, { label: "Duration", value: "One exchange" }], description: "Tie a thread of warm light between yourself and a willing ally. Describe a shared memory that strengthens the connection.", blankLines: 3 },
+    ] },
+    personality: [{ label: "Ideal", text: "", blankLines: 6 }, { label: "Flaw", blankLines: 4 }],
+    sections: [{ title: "Companion or keepsake", column: "middle", blankLines: 8 }],
+    notesBlankLines: 3,
+  } },
+  ...premadeExamples,
 ];

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "name": "",
+  "system": "dnd-5e-2014",
+  "paper": "a4",
+  "identity": [
+    {
+      "label": "Class & level",
+      "value": "Monk 3"
+    },
+    {
+      "label": "Subclass",
+      "value": "Way of the Open Hand"
+    },
+    {
+      "label": "Background",
+      "value": "Acolyte"
+    },
+    {
+      "label": "Race",
+      "value": "Human"
+    },
+    {
+      "label": "Size",
+      "value": "Medium"
+    }
+  ],
+  "attributes": [
+    {
+      "label": "Strength",
+      "value": 11,
+      "modifier": "+0"
+    },
+    {
+      "label": "Dexterity",
+      "value": 16,
+      "modifier": "+3"
+    },
+    {
+      "label": "Constitution",
+      "value": 14,
+      "modifier": "+2"
+    },
+    {
+      "label": "Intelligence",
+      "value": 9,
+      "modifier": "-1"
+    },
+    {
+      "label": "Wisdom",
+      "value": 15,
+      "modifier": "+2"
+    },
+    {
+      "label": "Charisma",
+      "value": 13,
+      "modifier": "+1"
+    }
+  ],
+  "savingThrows": [
+    {
+      "name": "Strength",
+      "bonus": "+2",
+      "proficient": true
+    },
+    {
+      "name": "Dexterity",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Constitution",
+      "bonus": "+2",
+      "proficient": false
+    },
+    {
+      "name": "Intelligence",
+      "bonus": "-1",
+      "proficient": false
+    },
+    {
+      "name": "Wisdom",
+      "bonus": "+2",
+      "proficient": false
+    },
+    {
+      "name": "Charisma",
+      "bonus": "+1",
+      "proficient": false
+    }
+  ],
+  "skills": [
+    {
+      "name": "Acrobatics",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Athletics",
+      "bonus": "+2",
+      "proficient": true
+    },
+    {
+      "name": "Insight",
+      "bonus": "+4",
+      "proficient": true
+    },
+    {
+      "name": "Religion",
+      "bonus": "+1",
+      "proficient": true
+    }
+  ],
+  "defenses": [
+    {
+      "label": "Armor class",
+      "value": 15
+    },
+    {
+      "label": "Initiative",
+      "value": "+3"
+    },
+    {
+      "label": "Speed",
+      "value": "40 ft"
+    },
+    {
+      "label": "Proficiency",
+      "value": "+2"
+    },
+    {
+      "label": "Passive Perception",
+      "value": 12
+    },
+    {
+      "label": "Ki save DC",
+      "value": 12
+    }
+  ],
+  "hitPoints": {
+    "maximum": 24,
+    "hitDice": "3d8"
+  },
+  "personality": [],
+  "notes": "",
+  "notesBlankLines": 0,
+  "attacks": [
+    {
+      "name": "Quarterstaff, 2 hands",
+      "bonus": "+5",
+      "damage": "1d8+3 bludgeoning",
+      "notes": ""
+    },
+    {
+      "name": "Quarterstaff, 1 hand",
+      "bonus": "+5",
+      "damage": "1d6+3 bludgeoning",
+      "notes": ""
+    },
+    {
+      "name": "Unarmed strike",
+      "bonus": "+5",
+      "damage": "1d4+3 bludgeoning",
+      "notes": ""
+    },
+    {
+      "name": "Dart",
+      "bonus": "+5",
+      "damage": "1d4+3 piercing",
+      "notes": "Range 20/60 ft"
+    }
+  ],
+  "resources": [
+    {
+      "name": "Ki",
+      "maximum": 3,
+      "recovery": "Short or long rest"
+    }
+  ],
+  "features": [
+    {
+      "name": "Martial Arts",
+      "description": "After attacking with a quarterstaff or unarmed strike, make one Unarmed Strike as a Bonus Action."
+    },
+    {
+      "name": "Flurry of Blows",
+      "description": "After taking the Attack action, use your Bonus Action to make TWO unarmed strikes.",
+      "summary": "Two unarmed strikes after the Attack action.",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": 1,
+        "resource": "Ki point",
+        "recovery": "Short or long rest"
+      },
+      "details": [
+        {
+          "label": "Timing",
+          "value": "Bonus Action"
+        }
+      ]
+    },
+    {
+      "name": "Patient Defense",
+      "description": "Take the Dodge action.",
+      "summary": "Bonus Action: Dodge.",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": 1,
+        "resource": "Ki point",
+        "recovery": "Short or long rest"
+      },
+      "details": [
+        {
+          "label": "Timing",
+          "value": "Bonus Action"
+        }
+      ]
+    },
+    {
+      "name": "Step of the Wind",
+      "description": "Use your Bonus Action to choose Dash or Disengage. Your jump distance doubles this turn.\nDash: Take the Dash action.\nDisengage: Take the Disengage action.",
+      "summary": "Dash or Disengage; double jump distance.",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": 1,
+        "resource": "Ki point",
+        "recovery": "Short or long rest"
+      },
+      "details": [
+        {
+          "label": "Timing",
+          "value": "Bonus Action"
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Open Hand Technique",
+      "description": "Whenever a Flurry of Blows attack hits, choose one option.\nKnock Down: DEX save DC 12 or fall Prone.\nPush: STR save DC 12 or be pushed 15 ft.\nNo Reactions: The target cannot take Reactions until the end of your next turn.",
+      "summary": "On a Flurry hit: knock down, push, or stop reactions.",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": 0,
+        "resource": "None",
+        "frequency": "On each Flurry of Blows hit; no extra Ki"
+      },
+      "details": [],
+      "options": []
+    },
+    {
+      "name": "Deflect Missiles",
+      "description": "When hit by a ranged weapon attack, use your Reaction to reduce damage by 1d10 + 6. If damage becomes 0, catch the projectile.",
+      "summary": "Reaction: reduce ranged damage by 1d10 + 6.",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": 0,
+        "resource": "None"
+      },
+      "details": [
+        {
+          "label": "Timing",
+          "value": "Reaction"
+        }
+      ],
+      "options": [
+        {
+          "name": "Throw it back",
+          "description": "After catching the projectile, spend 1 Ki to throw it back.",
+          "details": [],
+          "usage": {
+            "amount": 1,
+            "resource": "Ki point",
+            "recovery": "Short or long rest"
+          }
+        }
+      ]
+    }
+  ],
+  "proficiencies": [],
+  "equipment": [
+    "Quarterstaff",
+    "10 darts",
+    "Explorer’s pack",
+    "Holy symbol",
+    "Prayer book"
+  ],
+  "sections": []
+}

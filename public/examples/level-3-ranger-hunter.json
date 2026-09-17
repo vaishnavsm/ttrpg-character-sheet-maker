@@ -1,0 +1,295 @@
+{
+  "version": 1,
+  "name": "",
+  "system": "dnd-5e-2014",
+  "paper": "a4",
+  "identity": [
+    {
+      "label": "Class & level",
+      "value": "Ranger 3"
+    },
+    {
+      "label": "Subclass",
+      "value": "Hunter"
+    },
+    {
+      "label": "Background",
+      "value": "Outlander"
+    },
+    {
+      "label": "Race",
+      "value": "Wood elf"
+    }
+  ],
+  "attributes": [
+    {
+      "label": "Strength",
+      "value": 10,
+      "modifier": "+0"
+    },
+    {
+      "label": "Dexterity",
+      "value": 17,
+      "modifier": "+3"
+    },
+    {
+      "label": "Constitution",
+      "value": 14,
+      "modifier": "+2"
+    },
+    {
+      "label": "Intelligence",
+      "value": 8,
+      "modifier": "-1"
+    },
+    {
+      "label": "Wisdom",
+      "value": 16,
+      "modifier": "+3"
+    },
+    {
+      "label": "Charisma",
+      "value": 8,
+      "modifier": "-1"
+    }
+  ],
+  "savingThrows": [
+    {
+      "name": "Strength",
+      "bonus": "+2",
+      "proficient": true
+    },
+    {
+      "name": "Dexterity",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Constitution",
+      "bonus": "+2",
+      "proficient": false
+    },
+    {
+      "name": "Intelligence",
+      "bonus": "-1",
+      "proficient": false
+    },
+    {
+      "name": "Wisdom",
+      "bonus": "+3",
+      "proficient": false
+    },
+    {
+      "name": "Charisma",
+      "bonus": "-1",
+      "proficient": false
+    }
+  ],
+  "skills": [
+    {
+      "name": "Animal Handling",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Athletics",
+      "bonus": "+2",
+      "proficient": true
+    },
+    {
+      "name": "Investigation",
+      "bonus": "+1",
+      "proficient": true
+    },
+    {
+      "name": "Perception",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Stealth",
+      "bonus": "+5",
+      "proficient": true
+    },
+    {
+      "name": "Survival",
+      "bonus": "+5",
+      "proficient": true
+    }
+  ],
+  "defenses": [
+    {
+      "label": "Armor class",
+      "value": 15
+    },
+    {
+      "label": "Initiative",
+      "value": "+3"
+    },
+    {
+      "label": "Speed",
+      "value": "35 ft"
+    },
+    {
+      "label": "Proficiency",
+      "value": "+2"
+    },
+    {
+      "label": "Passive Perception",
+      "value": 15
+    }
+  ],
+  "hitPoints": {
+    "maximum": 28,
+    "hitDice": "3d10"
+  },
+  "personality": [],
+  "notes": "",
+  "notesBlankLines": 0,
+  "attacks": [
+    {
+      "name": "Longbow",
+      "bonus": "+7",
+      "damage": "1d8+3 piercing",
+      "notes": "Range 150/600 ft; includes Archery Fighting Style"
+    },
+    {
+      "name": "Shortsword",
+      "bonus": "+5",
+      "damage": "1d6+3 piercing",
+      "notes": ""
+    }
+  ],
+  "features": [
+    {
+      "name": "Colossus Slayer",
+      "description": "Once per turn, hit a creature below its maximum HP for +1d8 damage. No resource cost."
+    },
+    {
+      "name": "Archery",
+      "description": "+2 to ranged weapon attack rolls; included in Longbow +7."
+    },
+    {
+      "name": "Favored Enemy — Beasts",
+      "description": "Advantage on Survival to track Beasts and Intelligence to remember information about Beasts."
+    },
+    {
+      "name": "Natural Explorer — Forest",
+      "description": "After at least an hour of forest travel: difficult terrain does not slow the group; cannot become lost except magically; remain alert while doing another travel task; tracking reveals number, sizes and how long ago creatures passed; find twice as much food while foraging."
+    },
+    {
+      "name": "Primeval Awareness",
+      "description": "Sense whether Aberrations, Celestials, Dragons, Elementals, Fey, Fiends, or Undead are nearby. Normally within 1 mile; in your favored Forest terrain, 6 miles. You do not learn their exact location or number.",
+      "summary": "Sense supernatural creatures within 1 mile (forest: 6).",
+      "presentation": "card",
+      "kind": "ability",
+      "usage": {
+        "amount": 1,
+        "resource": "level 1 spell slot",
+        "recovery": "Long rest"
+      },
+      "details": [
+        {
+          "label": "Duration",
+          "value": "1 minute"
+        }
+      ]
+    },
+    {
+      "name": "Wood Elf",
+      "description": "Darkvision 60 ft. Fey Ancestry: advantage against charm; magic cannot put you to sleep. Trance: no normal sleep. Fleet of Foot: 35 ft. Mask of the Wild: hide while lightly obscured by natural phenomena."
+    }
+  ],
+  "spellcasting": {
+    "ability": "Wisdom",
+    "saveDC": 13,
+    "attackBonus": "+5",
+    "slots": [
+      {
+        "level": "1st",
+        "total": 3
+      }
+    ],
+    "spells": [
+      {
+        "name": "Hunter’s Mark",
+        "description": "Choose a creature. Every weapon hit against it deals +1d6 damage. You also get advantage on Perception and Survival checks to find it. When it drops to 0 HP, use a later Bonus Action to move the mark to another creature.",
+        "kind": "spell",
+        "presentation": "card",
+        "details": [
+          {
+            "label": "Casting Time",
+            "value": "Bonus Action"
+          },
+          {
+            "label": "Range",
+            "value": "90 ft"
+          },
+          {
+            "label": "Duration",
+            "value": "Concentration, up to 1 hour"
+          }
+        ],
+        "level": "1st",
+        "usage": {
+          "amount": 1,
+          "resource": "level 1 spell slot",
+          "recovery": "Long rest"
+        }
+      },
+      {
+        "name": "Goodberry",
+        "description": "Create 10 berries. Each berry takes an action to eat, restores 1 HP, and provides a day’s nourishment. They last 24 hours.",
+        "kind": "spell",
+        "presentation": "card",
+        "details": [
+          {
+            "label": "Casting Time",
+            "value": "Action"
+          }
+        ],
+        "level": "1st",
+        "usage": {
+          "amount": 1,
+          "resource": "level 1 spell slot",
+          "recovery": "Long rest"
+        }
+      },
+      {
+        "name": "Speak with Animals",
+        "description": "Communicate verbally with beasts.",
+        "kind": "spell",
+        "presentation": "card",
+        "details": [
+          {
+            "label": "Casting Time",
+            "value": "Action"
+          },
+          {
+            "label": "Range",
+            "value": "Self"
+          },
+          {
+            "label": "Duration",
+            "value": "10 minutes"
+          }
+        ],
+        "level": "1st",
+        "usage": {
+          "amount": 1,
+          "resource": "level 1 spell slot",
+          "recovery": "Long rest"
+        }
+      }
+    ]
+  },
+  "proficiencies": [],
+  "equipment": [
+    "Studded leather",
+    "Longbow",
+    "20 arrows",
+    "2 shortswords",
+    "Explorer’s pack"
+  ],
+  "sections": []
+}

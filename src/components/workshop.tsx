@@ -22,10 +22,10 @@ function Icon({ name }: { name: "print" | "download" | "arrow" | "file" }) {
   return <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>;
 }
 
-export function Workshop() {
+export function Workshop({ siteUrl = "" }: { siteUrl?: string }) {
   const [source, setSource] = useState(initialSource);
   const [exampleId, setExampleId] = useState("2014");
-  const [job, setJob] = useState<RenderJob | null>(() => ({ id: 0, source: initialSource, character: initialCharacter, html: renderCharacterDocument(initialCharacter) }));
+  const [job, setJob] = useState<RenderJob | null>(() => ({ id: 0, source: initialSource, character: initialCharacter, html: renderCharacterDocument(initialCharacter, siteUrl) }));
   const [result, setResult] = useState<RenderResult | null>(null);
   const [error, setError] = useState("");
   const [scale, setScale] = useState(1);
@@ -51,7 +51,7 @@ export function Workshop() {
   function render(nextSource = source) {
     try {
       const character = parseCharacter(nextSource);
-      const html = renderCharacterDocument(character);
+      const html = renderCharacterDocument(character, siteUrl);
       setError("");
       setJob({ id: ++requestId.current, source: nextSource, character, html });
     } catch (e) {
@@ -70,7 +70,7 @@ export function Workshop() {
       await doc.fonts.ready;
       if (requestId.current !== currentJob.id) return;
       const rendered = paginateDocument(doc);
-      setResult({ ...rendered, source: currentJob.source, name: currentJob.character.name, paper: currentJob.character.paper, system: currentJob.character.systemName ?? systemLabels[currentJob.character.system] });
+      setResult({ ...rendered, source: currentJob.source, name: currentJob.character.name || String(currentJob.character.identity.find(field => field.label === "Class & level")?.value ?? "Unnamed character"), paper: currentJob.character.paper, system: currentJob.character.systemName ?? systemLabels[currentJob.character.system] });
       setJob(null);
     } catch (e) {
       if (requestId.current !== currentJob.id) return;
@@ -151,7 +151,7 @@ export function Workshop() {
           </section>
         </div>
 
-        <details className="schema-help"><summary><span>Working with the specification</span><span>Fields, paper sizes & custom systems <span aria-hidden="true">＋</span></span></summary><div className="help-grid"><div><h3>The essentials</h3><p>Required: <code>version: 1</code>, <code>name</code>, and <code>system</code>. Choose <code>dnd-5e-2014</code>, <code>dnd-5e-2024</code>, or <code>generic</code>. Set <code>paper</code> to <code>a4</code> or <code>letter</code>.</p></div><div><h3>Build your own system</h3><p>Use arbitrary labels in <code>attributes</code>, <code>defenses</code>, and <code>resources</code>. Add <code>sections</code> with a title, column, and named entries. The generic template makes no D&D assumptions.</p></div><div><h3>Made to leave the screen</h3><p>Download the HTML to keep an offline copy. Use Print / PDF to print or save as PDF; turn off browser headers and footers. Long content continues onto additional pages. Examples demonstrate layout, not complete rules-validated builds.</p></div></div></details>
+        <details className="schema-help"><summary><span>Working with the specification</span><span>Fields, paper sizes & custom systems <span aria-hidden="true">＋</span></span></summary><div className="help-grid"><div><h3>The essentials</h3><p>Required: <code>version: 1</code>, <code>name</code>, and <code>system</code>. Choose <code>dnd-5e-2014</code>, <code>dnd-5e-2024</code>, or <code>generic</code>. Set <code>paper</code> to <code>a4</code> or <code>letter</code>.</p></div><div><h3>Build your own system</h3><p>Use arbitrary labels in <code>attributes</code>, <code>defenses</code>, and <code>resources</code>. Add <code>sections</code> with a title, column, and named entries. The generic template makes no D&D assumptions. Try the Cards & blank boxes example to see both output styles together.</p></div><div><h3>Made to leave the screen</h3><p>Download the HTML to keep an offline copy. Use Print / PDF to print or save as PDF; turn off browser headers and footers. Whole boxes move onto additional pages; they never split. Set <code>presentation</code> to <code>card</code> for a cut-out. Card types share pages. Use <code>options</code> for alternate modes and <code>usage</code> for resource costs. Examples demonstrate layout, not complete rules-validated builds.</p></div></div></details>
       </main>
       <footer className="app-footer"><span>FOLIO / CHARACTER SHEET WORKSHOP</span><span>Rendered in your browser. Nothing is uploaded.</span></footer>
       {job && <iframe key={job.id} ref={frame => { if (frame?.contentDocument?.readyState === "complete") void finishRender(frame, job); }} className="measurement-frame" title="Sheet layout measurement" aria-hidden="true" tabIndex={-1} sandbox="allow-same-origin" srcDoc={job.html} onLoad={e => void finishRender(e.currentTarget, job)} />}
