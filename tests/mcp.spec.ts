@@ -26,12 +26,9 @@ test("stateless MCP exposes its Markdown skill, validation, and shared renderer"
 
     const skill = await client.readResource({ uri: "skill://render-character-sheet/SKILL.md" });
     const skillContent = skill.contents[0];
-    expect(skillContent && "text" in skillContent ? skillContent.text : "").toContain(
-      "# Render a character sheet",
-    );
-    expect(skillContent && "text" in skillContent ? skillContent.text : "").toContain(
-      "## Character JSON reference",
-    );
+    const skillText = skillContent && "text" in skillContent ? skillContent.text : "";
+    expect(skillText).toContain("name: render-character-sheet");
+    expect(skillText.length).toBeGreaterThan(500);
 
     const invalid = await client.callTool({
       name: "validate_character",

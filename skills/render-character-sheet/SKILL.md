@@ -1,202 +1,79 @@
 ---
 name: render-character-sheet
-description: Validate structured TTRPG character data and render it as a printable, self-contained HTML character sheet. Use when a user wants to create or revise a character sheet and the mechanical values can be supplied explicitly.
+description: Compose structured TTRPG character data into a compact, printable character sheet and optional cut-out reference cards. Use when creating or revising a sheet from explicit character mechanics.
 ---
 
-# Render a character sheet
+# Compose and render a character sheet
 
-Use this server as a deterministic renderer, not as a game-rules engine. You are responsible for translating the user's request into character JSON. The server validates that JSON and returns HTML; it does not infer missing choices, calculate rules, or decide what a character should contain.
+The main job is information design: turn the supplied character into the smallest practical set of useful printed pages. The renderer handles measurement and HTML generation, but your JSON choices determine what stays together, what becomes a card, and what receives first-page priority.
 
-## Workflow
+Do not treat the input as a form to dump into sections in source order. Design the sheet around play at the table.
 
-1. Preserve the user's chosen game system and supplied mechanical values. Do not invent missing spells, equipment, bonuses, proficiencies, or character choices.
-2. Construct a `version: 1` character object. The smallest valid object is `{ "version": 1, "system": "generic" }`.
-3. Use the human-readable character JSON reference below for field-level details. Use `character-sheet://examples/minimal` only as a structural example, not as character facts.
-4. For uncertain or incrementally assembled data, call `validate_character` and repair every returned JSON Pointer path.
-5. Call `render_character_sheet` with the complete character object. Read the HTML from `structuredContent.html` when supported, otherwise use the text result.
+## Page strategy
 
-## Important constraints
+Aim for one character-sheet page. Use additional character-sheet pages only when the material cannot remain readable and useful on one page. Cut-out card pages are separate and do not count as a failure to keep the character sheet to one page.
 
-- All text values are treated as literal text and escaped. Do not send HTML in character fields.
-- Unknown fields are rejected.
-- Display values may be strings or finite numbers. Use strings when formatting matters, such as `"+5"` or `"1d8+3 piercing"`.
-- `resources[].used` cannot exceed `resources[].maximum`.
-- `presentation: "card"` produces a cut-out reference card; `presentation: "list"` keeps the entry on the sheet.
-- Use `generic` for systems without a dedicated profile and optionally provide `systemName`.
-- The returned document is self-contained, script-free HTML with embedded styles. The renderer is stateless and does not retain the character or generated document.
+Use the first page for information needed during play:
 
-If validation fails, change only the fields identified by the errors unless the user asks for a broader revision.
+- identity and core attributes;
+- defenses, hit points, movement, initiative, saves, and skills;
+- every spendable or trackable resource, including spell slots;
+- attacks and spellcasting numbers such as save DC and attack bonus;
+- concise summaries of combat-relevant abilities.
 
-## Character JSON reference
+Keep resources visually close to hit points and keep attacks, offensive abilities, and spellcasting numbers near one another. Group related material so a player can understand their available actions and remaining resources without turning a page.
 
-Start with these three fields. Everything else is optional.
+Use adaptive multi-column layout. Give compact statistics narrow columns and allow dense material such as equipment, notes, or an inventory to span two columns when that packs the page better. Prefer useful occupation of available first-page space over automatically relegating equipment or notes to page two. If another page is unavoidable, move lower-priority reference material there: equipment, proficiencies, background detail, personality, extended notes, and non-combat lore.
 
-```json
-{
-  "version": 1,
-  "name": "",
-  "system": "generic"
-}
-```
+Never split a single box across pages. Move it whole, change its allowed width, shorten redundant prose, or move the whole box to the next page. Use `group`, `placement`, `priority`, `width`, `allowedWidths`, and `column` on custom sections to express these relationships instead of relying on source order.
 
-### Document
+Do not add decorative or low-value printed matter merely because space exists. In particular, omit system/version badges, print instructions, player or owner names on cards, beginner-combat advice, death-save boxes, empty personality prompts, and similar furniture unless the user explicitly wants them. A character name may remain blank for handwriting.
 
-| Field | Meaning |
-| --- | --- |
-| `version` | Always `1`. |
-| `name` | Character name. May be blank. |
-| `system` | `generic`, `dnd-5e-2014`, or `dnd-5e-2024`. |
-| `systemName` | Custom display name when using `generic`. |
-| `paper` | `a4` or `letter`. Defaults to `a4`. |
+## Decide between sheet entries and cards
 
-### Identity and numbers
+Use `presentation: "list"` for short, always-on information that is easiest to scan on the sheet: passive traits, proficiencies, senses, languages, and brief permanent features.
 
-```json
-"identity": [
-  { "label": "Class & level", "value": "Fighter 3" }
-],
-"attributes": [
-  { "label": "Strength", "value": 16, "modifier": "+3" }
-],
-"defenses": [
-  { "label": "Armor class", "value": 17 }
-],
-"hitPoints": {
-  "maximum": 24,
-  "current": 19,
-  "temporary": 0,
-  "hitDice": "3d10"
-}
-```
+Use `presentation: "card"` when a spell or ability benefits from being held as a separate play aid, especially when it:
 
-`identity` and `defenses` use label/value pairs. `attributes` can also include a modifier. Display values may be strings or finite numbers.
+- consumes a tracked resource;
+- has a limited frequency or recovery rule;
+- contains enough procedure or choices to clutter the main sheet; or
+- is something the player actively selects during play.
 
-### Checks
+Keep a short `summary` on the main sheet when the full rules move to a card, particularly for combat-relevant abilities. The sheet must still tell the player that the option exists and how it fits their turn.
 
-```json
-"savingThrows": [
-  { "name": "Strength", "bonus": "+5", "proficient": true }
-],
-"skills": [
-  { "name": "Athletics", "bonus": "+5", "proficient": true }
-]
-```
+Every consumable card must state its cost prominently through `usage`: resource, amount, frequency, and recovery as applicable. Do not make the player infer whether a card costs Ki, Focus, a spell slot, a once-per-day use, or another pool. Use `amount: 0` only when the action explicitly spends no resource.
 
-`proficient` defaults to `false`.
+Cards are uniform, single-width cut-outs. Never create a double-width card merely to preserve verbose prose. Condense wording and details to the information required at the table. Use compact notation where it remains clear—for example, `1 action / ritual (+10 min)` rather than a paragraph explaining both casting modes.
 
-### Resources and attacks
+Alternate modes of one ability belong together on one card using `options`; different abilities belong on different cards. Do not split Wild Shape forms, Channel Divinity choices, or similar modes into separate cards unless the user explicitly asks. Choose `optionLayout: "compact"` when concise inline options fit, or `"stacked"` when each option needs its own readable block. Use `"cards"` only when the user actually wants separate option cards.
 
-```json
-"resources": [
-  {
-    "name": "Focus",
-    "maximum": 3,
-    "used": 1,
-    "recovery": "Long rest",
-    "display": "circles"
-  }
-],
-"attacks": [
-  {
-    "name": "Longsword",
-    "bonus": "+5",
-    "damage": "1d8 + 3 slashing",
-    "notes": "Versatile 1d10"
-  }
-]
-```
+Mix spell, ability, and trait cards on the same cutting pages to minimize paper. Their `kind` labels should remain visually prominent; do not create separate pages by type.
 
-Resource `display` can be `circles` or `pool`. `maximum` is an integer from 1 through 30. `used` defaults to `0` and cannot exceed `maximum`.
+## Blank writing space
 
-### Features and cards
+Omitted information and intentionally blank printable space are different. Use `blankLines` when the user wants a labeled box or notes area to fill by hand. Otherwise omit empty personality, notes, and custom sections rather than generating placeholder boxes.
 
-```json
-"features": [
-  {
-    "name": "Second Wind",
-    "description": "Regain hit points.",
-    "kind": "ability",
-    "presentation": "list",
-    "details": [
-      { "label": "Use", "value": "Bonus action" }
-    ],
-    "usage": {
-      "resource": "Second Wind",
-      "amount": 1,
-      "frequency": "Once per rest",
-      "recovery": "Short or long rest"
-    }
-  }
-]
-```
+## Preserve the character
 
-`presentation` is `list` or `card`. Add `blankLines` from 0 through 24 for writing space. Entries can contain `options`, each with `name`, `description`, optional `details`, and optional `usage`. Set `optionLayout` to `stacked`, `compact`, or `cards`.
+Use only mechanics supplied by the user or an authoritative source they selected. Do not calculate, rebalance, audit, or invent spells, equipment, bonuses, proficiencies, resources, or character choices. Preserve meaningful formatting in display strings such as `"+5"` and `"1d8+3 piercing"`. Use `generic` with `systemName` when there is no dedicated system profile.
 
-### Spellcasting
+When source material is verbose, condense presentation without changing mechanics. Remove repeated explanations, not rules that affect decisions at the table.
 
-```json
-"spellcasting": {
-  "ability": "Intelligence",
-  "saveDC": 13,
-  "attackBonus": "+5",
-  "slots": [
-    { "level": "1st", "total": 2 }
-  ],
-  "spells": [
-    { "name": "Magic Missile", "level": "1st", "description": "" }
-  ]
-}
-```
+## Render
 
-Spells accept the same entry fields as features. Slot totals are positive integers up to 20.
+Construct a `version: 1` character object; the smallest valid object is `{ "version": 1, "system": "generic" }`. The render tool's input schema is the authoritative field reference.
 
-### Equipment, personality, and notes
+For uncertain or incrementally assembled data, call `validate_character` and fix the reported JSON Pointer paths. Unknown fields are rejected, text is escaped, and `resources[].used` cannot exceed `resources[].maximum`.
 
-```json
-"equipment": ["Backpack", "Rope", "Lantern"],
-"proficiencies": ["Light armor", "Common", "Elvish"],
-"personality": [
-  {
-    "label": "Ideal",
-    "text": "",
-    "blankLines": 4,
-    "placement": "secondary"
-  }
-],
-"notes": "Free-form notes",
-"notesBlankLines": 6
-```
+Call `render_character_sheet` only after making the composition decisions above. Read the HTML from `structuredContent.html` when available, otherwise from the text result. The returned document is self-contained, script-free, and stateless.
 
-Empty personality boxes, custom sections, and notes are omitted unless they contain text or a positive blank-line count. Personality `placement` is `main` or `secondary`.
+After rendering, check the outcome conceptually against these questions:
 
-### Custom sections
+1. Did the character sheet stay to one page where reasonably possible?
+2. Are HP, resources, attacks, spellcasting numbers, and combat abilities together on page one?
+3. Is any box split, any page unnecessarily sparse, or any content duplicated between sheet and cards?
+4. Do all limited-use cards clearly show their cost and recovery?
+5. Are cards single-width, consistently sized, and packed together regardless of type?
 
-```json
-"sections": [
-  {
-    "title": "Inventory",
-    "entries": [
-      { "name": "Supplies", "description": "Rope and rations" }
-    ],
-    "blankLines": 4,
-    "width": 2,
-    "allowedWidths": [1, 2],
-    "placement": "secondary",
-    "priority": 40,
-    "group": "travel",
-    "column": "right"
-  }
-]
-```
-
-| Field | Meaning |
-| --- | --- |
-| `entries` | Uses the same entry format as `features`. |
-| `width` | `1`, `2`, or `3` columns. Defaults to `1`. |
-| `allowedWidths` | One or more permitted widths from `1`, `2`, and `3`. |
-| `placement` | `main` or `secondary`. Defaults to `secondary`. |
-| `priority` | Integer from 0 through 100. Higher values are placed first. |
-| `group` | Keeps related sections adjacent and gives them a shared width. |
-| `column` | Preferred `left`, `middle`, or `right` column. |
-
-Unknown fields are rejected. Call `validate_character` after constructing or revising an object; use its JSON Pointer paths to correct invalid fields before rendering.
+If validation fails, change only the invalid fields. If the layout is poor, revise grouping, priority, width, summaries, or card/list presentation rather than changing the character's mechanics.
