@@ -82,3 +82,50 @@ test("stateless MCP exposes its Markdown skill, validation, and shared renderer"
     await client.close();
   }
 });
+
+test("publishes an AI Catalog and MCP Server Card", async ({ baseURL, request }) => {
+  const catalogResponse = await request.get("/.well-known/ai-catalog.json");
+  expect(catalogResponse.ok()).toBe(true);
+  expect(catalogResponse.headers()["content-type"]).toBe(
+    "application/ai-catalog+json; charset=utf-8",
+  );
+  expect(catalogResponse.headers()["access-control-allow-origin"]).toBe("*");
+  const catalog = await catalogResponse.json();
+  expect(catalog).toEqual({
+    specVersion: "1.0",
+    entries: [
+      {
+        identifier: "urn:air:vaishnavsm.github.io:mcp:ttrpg-character-sheet-maker",
+        type: "application/mcp-server-card+json",
+        url: `${baseURL}/mcp/server-card`,
+      },
+    ],
+  });
+
+  const cardResponse = await request.get("/mcp/server-card", {
+    headers: { Accept: "application/mcp-server-card+json" },
+  });
+  expect(cardResponse.ok()).toBe(true);
+  expect(cardResponse.headers()["content-type"]).toBe(
+    "application/mcp-server-card+json; charset=utf-8",
+  );
+  const card = await cardResponse.json();
+  expect(card).toMatchObject({
+    $schema: "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json",
+    name: "io.github.vaishnavsm/ttrpg-character-sheet-maker",
+    version: "0.1.0",
+    remotes: [
+      {
+        type: "streamable-http",
+        url: `${baseURL}/mcp`,
+        supportedProtocolVersions: ["2026-07-28"],
+      },
+    ],
+  });
+
+  const notModified = await request.get("/mcp/server-card", {
+    headers: { "If-None-Match": cardResponse.headers().etag },
+  });
+  expect(notModified.status()).toBe(304);
+  expect(await notModified.body()).toHaveLength(0);
+});

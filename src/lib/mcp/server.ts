@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { createMcpHandler, McpServer } from "@modelcontextprotocol/server";
 import { z } from "zod";
 
+import { mcpServerInfo } from "@/lib/mcp/discovery";
 import { characterSchema } from "@/lib/sheet/schema";
 import { renderCharacterSheet, validateCharacter } from "@/lib/sheet/service";
 import { siteUrlFromRequest } from "@/lib/site-url";
@@ -88,7 +89,7 @@ const renderOutputSchema = z.strictObject({
 
 function createServer(siteUrl: string): McpServer {
   const server = new McpServer(
-    { name: "ttrpg-character-sheet-renderer", version: "0.1.0" },
+    mcpServerInfo,
     {
       capabilities: {
         extensions: { "io.modelcontextprotocol/skills": {} },

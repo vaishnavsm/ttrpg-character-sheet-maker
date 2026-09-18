@@ -22,6 +22,8 @@ Connect any Streamable HTTP MCP client to `http://localhost:3010/mcp`. The endpo
 
 The server also exposes `skill://index.json` for clients using the earlier MCP skill-discovery convention and advertises the `io.modelcontextprotocol/skills` extension. It remains usable by ordinary MCP clients that only understand tools and resources.
 
+For pre-connection discovery, `/.well-known/ai-catalog.json` publishes an experimental AI Catalog that points to the MCP Server Card at `/mcp/server-card`. Both documents use their specified media types, allow browser reads with CORS, cache for one hour, and support `ETag` revalidation. Their public URLs follow `SITE_URL` when configured and otherwise use the request origin.
+
 With the development server running, exercise the endpoint using the included ad-hoc client:
 
 ```sh
